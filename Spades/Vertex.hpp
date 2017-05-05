@@ -9,5 +9,10 @@
 #ifndef Vertex_h
 #define Vertex_h
 
+#include "Resource.hpp"
+
+class Vertex {
+    
+};
 
 #endif /* Vertex_h */

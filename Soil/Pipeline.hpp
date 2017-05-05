@@ -10,10 +10,19 @@
 #define Pipeline_hpp
 
 #include "WindowContext.hpp"
+#include "Resource.hpp"
+#include "Vertex.hpp"
+#include "Rasterizer.hpp"
 
 class Pipeline {
 private:
     WindowContext *wc;
+    
+    int vertexShader;
+    int fragmentShader;
+    Rasterizer rasterizer;
+    int attributes;
+    int uniforms;
     
 public:
     Pipeline() {

@@ -33,6 +33,14 @@ vec<size> operator OPER (const vec<size> & vl, const vec<size> & vr) {\
 template <int size>\
 vec<size> operator OPER (vec<size> && vl, const vec<size> & vr) {\
     return std::move(vl.NAME(vr));\
+}\
+template <int size>\
+vec<size> operator OPER (const vec<size> & vl, vec<size> && vr) {\
+    return std::move(vr.NAME(vl));\
+}\
+template <int size>\
+vec<size> operator OPER (vec<size> && vl, vec<size> && vr) {\
+    return std::move(vl.NAME(vr));\
 }
 
 typedef double data_t;
@@ -72,6 +80,9 @@ public:
     vec(vec<size> && v) {
         if (this == &v) {
             return;
+        }
+        if (this->own_memory) {
+            delete [] this->d_ptr;
         }
         this->d_ptr = v.d_ptr;
         this->own_memory = v.own_memory;
