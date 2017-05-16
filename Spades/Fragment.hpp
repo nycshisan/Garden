@@ -9,5 +9,13 @@
 #ifndef Fragment_h
 #define Fragment_h
 
+#include "vec.hpp"
+
+class Fragment {
+public:
+    vec<4> position;
+    
+    Fragment(vec<4> position): position(position) {}
+};
 
 #endif /* Fragment_h */

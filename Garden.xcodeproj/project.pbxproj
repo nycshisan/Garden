@@ -29,7 +29,6 @@
 		A5323F591EB9AE6800532E6F /* Rasterizer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Rasterizer.hpp; path = Spades/Rasterizer.hpp; sourceTree = "<group>"; };
 		A5323F5A1EB9AE9400532E6F /* Vertex.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Vertex.hpp; path = Spades/Vertex.hpp; sourceTree = "<group>"; };
 		A5323F5B1EB9AEA600532E6F /* Fragment.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Fragment.hpp; path = Spades/Fragment.hpp; sourceTree = "<group>"; };
-		A5323F5C1EB9AEB700532E6F /* Resource.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Resource.hpp; path = Spades/Resource.hpp; sourceTree = "<group>"; };
 		A5323F5D1EB9B22600532E6F /* vec.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = vec.hpp; path = Spades/vec.hpp; sourceTree = "<group>"; };
 		A53E83051EB1FF37002BA1D5 /* libGLEW.2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.0.0.dylib; path = ../../../../../../usr/local/lib/libGLEW.2.0.0.dylib; sourceTree = "<group>"; };
 		A53E83111EB20221002BA1D5 /* Playground */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Playground; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,7 +59,6 @@
 				A5323F591EB9AE6800532E6F /* Rasterizer.hpp */,
 				A5323F5A1EB9AE9400532E6F /* Vertex.hpp */,
 				A5323F5B1EB9AEA600532E6F /* Fragment.hpp */,
-				A5323F5C1EB9AEB700532E6F /* Resource.hpp */,
 				A5323F5D1EB9B22600532E6F /* vec.hpp */,
 			);
 			name = Spades;

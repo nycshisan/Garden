@@ -14,7 +14,7 @@
 #include <utility>
 
 #define DEFINE_VEC_ARITH_METHOD(NAME, OPER) \
-vec<size> & NAME(const vec<size> & v) {\
+vec<size> & NAME(const vec<size> &v) {\
     for (int i = 0; i < size; ++i) {\
         (*this)[i] OPER v[i];\
     }\
@@ -23,7 +23,7 @@ vec<size> & NAME(const vec<size> & v) {\
 
 #define DEFINE_VEC_ARITH_OPERATOR(NAME, OPER) \
 template <int size>\
-vec<size> operator OPER (const vec<size> & vl, const vec<size> & vr) {\
+vec<size> operator OPER (const vec<size> &vl, const vec<size> &vr) {\
     vec<size> v;\
     for (int i = 0; i < size; ++i) {\
         v[i] = vl[i] OPER vr[i];\
@@ -31,24 +31,25 @@ vec<size> operator OPER (const vec<size> & vl, const vec<size> & vr) {\
     return v;\
 }\
 template <int size>\
-vec<size> operator OPER (vec<size> && vl, const vec<size> & vr) {\
+vec<size> operator OPER (vec<size> &&vl, const vec<size> &vr) {\
     return std::move(vl.NAME(vr));\
 }\
 template <int size>\
-vec<size> operator OPER (const vec<size> & vl, vec<size> && vr) {\
+vec<size> operator OPER (const vec<size> &vl, vec<size> &&vr) {\
     return std::move(vr.NAME(vl));\
 }\
 template <int size>\
-vec<size> operator OPER (vec<size> && vl, vec<size> && vr) {\
+vec<size> operator OPER (vec<size> &&vl, vec<size> &&vr) {\
     return std::move(vl.NAME(vr));\
 }
 
-typedef double data_t;
+typedef float data_t;
 
 template <int size>
 class vec {
     data_t *d_ptr;
-    bool own_memory;
+    int offset = 1;
+    bool own_memory = false;
     
 public:
     vec() {
@@ -56,7 +57,7 @@ public:
         this->own_memory = true;
     }
     
-    vec(data_t *d_ptr): d_ptr(d_ptr) {
+    vec(data_t *d_ptr, int offset): d_ptr(d_ptr), offset(offset) {
         this->own_memory = false;
     }
     
@@ -69,7 +70,7 @@ public:
         }
     }
     
-    vec(const vec<size> & v) {
+    vec(const vec<size> &v) {
         this->d_ptr = new data_t[size];
         this->own_memory = true;
         for (int i = 0; i < size; ++i) {
@@ -77,7 +78,19 @@ public:
         }
     }
     
-    vec(vec<size> && v) {
+    vec<size>& operator = (const vec<size> &v) {
+        if (this->own_memory) {
+            delete [] this->d_ptr;
+        }
+        this->d_ptr = new data_t[size];
+        this->own_memory = true;
+        for (int i = 0; i < size; ++i) {
+            this->d_ptr[i] = v[i];
+        }
+        return *this;
+    }
+    
+    vec(vec<size> &&v) {
         if (this == &v) {
             return;
         }
@@ -108,9 +121,9 @@ public:
         return sum;
     }
     
-    inline data_t & operator [](const int i) const {
+    inline data_t& operator [](const int i) const {
         assert(i < size);
-        return *(d_ptr + i);
+        return *(d_ptr + i * offset);
     }
 };
 
@@ -118,6 +131,7 @@ DEFINE_VEC_ARITH_OPERATOR(add, +)
 DEFINE_VEC_ARITH_OPERATOR(sub, -)
 DEFINE_VEC_ARITH_OPERATOR(mul, *)
 DEFINE_VEC_ARITH_OPERATOR(div, /)
+
 
 #undef DEFINE_VEC_ARITH_METHOD
 #undef DEFINE_VEC_ARITH_OPERATOR
