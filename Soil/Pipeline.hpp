@@ -16,7 +16,8 @@
 
 #include <vector>
 #include <memory>
-#include <cassert>
+#include <thread>
+#include <mutex>
 #include <functional>
 
 template <class Attribute, class Uniform>
@@ -35,7 +36,7 @@ public:
     Uniform uniform;
     
     std::function<std::shared_ptr<Vertex>(const Attribute &)> vertexShader;
-    std::function<Pixel(const Fragment &, const Uniform &)> fragmentShader;
+    std::function<void(const Fragment &, const Uniform &, Pixel &)> fragmentShader;
     
     Pipeline(std::shared_ptr<WindowContext> wc): wc(wc) {
         this->rasterizer = std::make_shared<Rasterizer>(wc->width, wc->height);
@@ -45,11 +46,23 @@ public:
         std::shared_ptr<Vertex> v[4];
         for (int i = 0; i < 4; ++i) {
             v[i] = vertexShader(vertex_buf[i]);
+            v[i]->convertToWindowCoord();
         }
-        auto fragments = rasterizer->rasterize(v);
-        for (auto fragment: fragments) {
-            wc->setPixel(fragmentShader(fragment, uniform));
+        
+        Fragment crtf;
+        Pixel crtp;
+        
+        rasterizer->init(v);
+        
+        while (rasterizer->rasterize(crtf)) {
+            fragmentShader(crtf, uniform, crtp);
+            wc->setPixel(crtp);
         }
+        
+//        const std::vector<Fragment> &fragments = rasterizer->rasterize(v);
+//        for (int i = 0; i < fragments.size(); ++i) {
+//            wc->setPixel(fragmentShader(fragments[i], uniform));
+//        }
         
     }
 };
