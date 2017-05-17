@@ -10,8 +10,7 @@
 #define vec_h
 
 #include <cassert>
-#include <vector>
-#include <utility>
+#include <cstdarg>
 
 #define DEFINE_VEC_ARITH_METHOD(NAME, OPER) \
 vec<size> & NAME(const vec<size> &v) {\
@@ -61,13 +60,16 @@ public:
         this->own_memory = false;
     }
     
-    vec(std::vector<data_t> &&v) {
-        assert(v.size() == size);
+    vec(data_t d, ...) {
+        va_list ap;
+        va_start(ap, d);
         this->d_ptr = new data_t[size];
         this->own_memory = true;
-        for (int i = 0; i < v.size(); ++i) {
-            d_ptr[i] = v[i];
+        *d_ptr = d;
+        for (int i = 1; i < size; ++i) {
+            d_ptr[i] = data_t(va_arg(ap, double));
         }
+        va_end(ap);
     }
     
     vec(const vec<size> &v) {

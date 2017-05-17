@@ -57,13 +57,7 @@ public:
         while (rasterizer->rasterize(crtf)) {
             fragmentShader(crtf, uniform, crtp);
             wc->setPixel(crtp);
-        }
-        
-//        const std::vector<Fragment> &fragments = rasterizer->rasterize(v);
-//        for (int i = 0; i < fragments.size(); ++i) {
-//            wc->setPixel(fragmentShader(fragments[i], uniform));
-//        }
-        
+        }        
     }
 };
 

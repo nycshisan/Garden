@@ -14,8 +14,6 @@
 class Fragment {
 public:
     vec<4> position;
-    
-//    Fragment(vec<4> position): position(position) {}
 };
 
 #endif /* Fragment_h */

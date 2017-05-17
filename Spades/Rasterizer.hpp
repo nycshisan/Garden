@@ -32,11 +32,11 @@ public:
     }
     
     bool rasterize(Fragment &f) {
-        if (j == max_j) {
+        if (j >= max_j) {
             ++i;
             j = min_j;
         }
-        if (i == max_i) {
+        if (i >= max_i) {
             return false;
         }
         f.position[0] = data_t(i);
@@ -46,22 +46,6 @@ public:
         ++j;
         return true;
     }
-    
-//    std::vector<Fragment> rasterize(std::shared_ptr<Vertex> v[]) {
-//        fragments.clear();
-//        
-//        for (int i = 0; i < 4; ++i) {
-//            v[i]->convertToWindowCoord();
-//        }
-//        
-//        for (int i = int(v[0]->position[0] * width); i < int(v[2]->position[0] * width); ++i) {
-//            for (int j = int(v[0]->position[1] * height); j < int(v[2]->position[1] * height); ++j) {
-//                fragments.emplace_back(vec<4>({data_t(i), data_t(j), 0.0, 1.0}));
-//            }
-//        }
-//        return fragments;
-//    }
-    
 };
 
 #endif /* Rasterizer_h */

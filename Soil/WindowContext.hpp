@@ -16,6 +16,7 @@
 #include <cassert>
 #include <utility>
 #include <unistd.h>
+#include <memory>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -123,17 +124,17 @@ public:
     }
     
     void setPixel(const Pixel &pixel) {
-        const std::pair<int, int> &xy = pixel.first;
-        int x = xy.first;
-        int y = xy.second;
+        int x = pixel.first.first;
+        int y = pixel.first.second;
         assert(x >= 0 && x < width);
         assert(y >= 0 && y < height);
         float *position = pixels_fg + (x + width * y) * 4;
         
         const vec<4> &rgba = pixel.second;
-        for (int i = 0; i < 4; ++i) {
-            position[i] = rgba[i];
-        }
+        position[0] = rgba[0];
+        position[1] = rgba[1];
+        position[2] = rgba[2];
+        position[3] = rgba[3];
     }
     
     void setFPSBoundary(double fps) {
