@@ -81,7 +81,7 @@ private:
         if (fpsBoundary > 0) {
             double targetInterval = 1 / fpsBoundary;
             double currentInterval = glfwGetTime() - time;
-            int wait = int((targetInterval - currentInterval) * 1000000 * 0.97); // cut some idle time
+            int wait = int((targetInterval - currentInterval) * 1000000 * 0.98); // cut some idle time
             if (wait > 0)
                 usleep(wait);
         }
@@ -131,10 +131,7 @@ public:
         float *position = pixels_fg + (x + width * y) * 4;
         
         const vec<4> &rgba = pixel.second;
-        position[0] = rgba[0];
-        position[1] = rgba[1];
-        position[2] = rgba[2];
-        position[3] = rgba[3];
+        memcpy(position, rgba.d_ptr, 4 * sizeof(data_t));
     }
     
     void setFPSBoundary(double fps) {

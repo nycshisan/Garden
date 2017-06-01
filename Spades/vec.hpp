@@ -46,21 +46,21 @@ typedef float data_t;
 
 template <int size>
 class vec {
-    data_t *d_ptr;
-    int offset = 1;
     bool own_memory = false;
     
 public:
+    data_t *d_ptr;
+    
     vec() {
         this->d_ptr = new data_t[size];
         this->own_memory = true;
     }
     
-    vec(data_t *d_ptr, int offset): d_ptr(d_ptr), offset(offset) {
+    vec(data_t *d_ptr): d_ptr(d_ptr) {
         this->own_memory = false;
     }
     
-    vec(data_t d, ...) {
+    vec(double d, ...) {
         va_list ap;
         va_start(ap, d);
         this->d_ptr = new data_t[size];
@@ -93,8 +93,14 @@ public:
     }
     
     vec(vec<size> &&v) {
+        this->d_ptr = v.d_ptr;
+        this->own_memory = v.own_memory;
+        v.own_memory = false;
+    }
+    
+    vec<size>& operator = (vec<size> &&v) {
         if (this == &v) {
-            return;
+            return *this;
         }
         if (this->own_memory) {
             delete [] this->d_ptr;
@@ -102,6 +108,7 @@ public:
         this->d_ptr = v.d_ptr;
         this->own_memory = v.own_memory;
         v.own_memory = false;
+        return *this;
     }
     
     ~vec() {
@@ -125,7 +132,7 @@ public:
     
     inline data_t& operator [](const int i) const {
         assert(i < size);
-        return *(d_ptr + i * offset);
+        return *(d_ptr + i);
     }
 };
 

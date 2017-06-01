@@ -22,10 +22,7 @@ class Uniform_HR {
 void fs(const Fragment &f, const Uniform_HR &u, Pixel &p) {
     p.first.first = int(f.position[0]);
     p.first.second = int(f.position[1]);
-    p.second[0] = 1.0;
-    p.second[1] = 1.0;
-    p.second[2] = 1.0;
-    p.second[3] = 1.0;
+    p.second[0] = p.second[1] =p.second[2]=p.second[3] = 1.0;
 }
 
 std::shared_ptr<Vertex> vs(const Attribute_HR &a) {
