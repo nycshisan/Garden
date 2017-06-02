@@ -23,8 +23,6 @@
 
 #include "vec.hpp"
 
-typedef std::pair<std::pair<int, int>, vec<4>> Pixel;
-
 class WindowContext {
 private:
     float *pixels_fg = nullptr, *pixels_bg = nullptr;
@@ -123,15 +121,12 @@ public:
         updateTimer();
     }
     
-    void setPixel(const Pixel &pixel) {
-        int x = pixel.first.first;
-        int y = pixel.first.second;
+    void setPixel(int x, int y, const vec4 &rgba) {
         assert(x >= 0 && x < width);
         assert(y >= 0 && y < height);
         float *position = pixels_fg + (x + width * y) * 4;
         
-        const vec<4> &rgba = pixel.second;
-        memcpy(position, rgba.d_ptr, 4 * sizeof(data_t));
+        memcpy(position, rgba.d, 4 * sizeof(data_t));
     }
     
     void setFPSBoundary(double fps) {

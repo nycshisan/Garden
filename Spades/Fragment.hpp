@@ -13,7 +13,7 @@
 
 class Fragment {
 public:
-    vec<4> position;
+    vec4 position;
 };
 
 #endif /* Fragment_h */

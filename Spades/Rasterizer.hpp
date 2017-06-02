@@ -17,34 +17,27 @@
 class Rasterizer {
     unsigned int width, height;
     
-    int i, j, min_i, max_i, min_j, max_j;
+    Fragment *frags;
     
 public:
-    Rasterizer(unsigned int width, unsigned int height): width(width), height(height) {}
+    Rasterizer(unsigned int width, unsigned int height, Fragment *frags): width(width), height(height), frags(frags) {}
     
-    void init(std::shared_ptr<Vertex> v[]) {
-        min_i = int(v[0]->position[0] * width);
-        max_i = int(v[2]->position[0] * width);
-        min_j = int(v[0]->position[1] * height);
-        max_j = int(v[2]->position[1] * height);
-        i = min_i;
-        j = min_j;
-    }
-    
-    bool rasterize(Fragment &f) {
-        if (j >= max_j) {
-            ++i;
-            j = min_j;
+    size_t rasterize(Vertex *vertexes) {
+        size_t count = 0;
+        size_t min_i = vertexes[0].position.x * width;
+        size_t max_i = vertexes[2].position.x * width;
+        size_t min_j = vertexes[0].position.y * height;
+        size_t max_j = vertexes[2].position.y * height;
+        
+        for (size_t i = min_i; i <= max_i; ++i) {
+            for (size_t j = min_j; j <= max_j; ++j) {
+                frags[count].position.x = i;
+                frags[count].position.y = j;
+                ++count;
+            }
         }
-        if (i >= max_i) {
-            return false;
-        }
-        f.position[0] = data_t(i);
-        f.position[1] = data_t(j);
-        f.position[2] = 0.0;
-        f.position[3] = 1.0;
-        ++j;
-        return true;
+        
+        return count;
     }
 };
 
