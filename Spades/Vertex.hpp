@@ -13,13 +13,11 @@
 
 class Vertex {
 public:
-    vec<4> position;
-    
-    Vertex(vec<4> position): position(position) {};
+    vec4 position;
     
     void convertToWindowCoord() {
-        position[0] = (position[0] + 1.0) / 2; // x
-        position[1] = -(position[1] - 1.0) / 2; // y
+        position.x = (position.x + 1.0) / 2;
+        position.y = -(position.y - 1.0) / 2;
     }
 };
 

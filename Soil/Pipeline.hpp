@@ -24,40 +24,46 @@ template <class Attribute, class Uniform>
 class Pipeline {
 private:
     unsigned int width, height;
-    std::shared_ptr<WindowContext> wc;
+    WindowContext *wc;
     
-    std::shared_ptr<Rasterizer> rasterizer;
+    Rasterizer *rasterizer;
+    
+    Fragment *frags;
     
 public:
     std::vector<Attribute> vertex_buf;
-    typename std::vector<Attribute>::iterator vertex_buf_iter = vertex_buf.begin();
+    //typename std::vector<Attribute>::iterator vertex_buf_iter = vertex_buf.begin();
     std::vector<int> index_buf;
-    std::vector<int>::iterator index_buf_iter = index_buf.begin();
+    //std::vector<int>::iterator index_buf_iter = index_buf.begin();
     Uniform uniform;
     
-    std::function<std::shared_ptr<Vertex>(const Attribute &)> vertexShader;
-    std::function<void(const Fragment &, const Uniform &, Pixel &)> fragmentShader;
+    std::function<void(const Attribute &, Vertex &)> vertexShader;
+    std::function<void(const Fragment &, const Uniform &, vec4 &)> fragmentShader;
     
-    Pipeline(std::shared_ptr<WindowContext> wc): wc(wc) {
-        this->rasterizer = std::make_shared<Rasterizer>(wc->width, wc->height);
+    Pipeline(WindowContext *wc): wc(wc) {
+        this->frags = new Fragment[wc->width * wc->height];
+        this->rasterizer = new Rasterizer(wc->width, wc->height, frags);
     }
     
     void draw_rectangle() {
-        std::shared_ptr<Vertex> v[4];
-        for (int i = 0; i < 4; ++i) {
-            v[i] = vertexShader(vertex_buf[i]);
-            v[i]->convertToWindowCoord();
+        Vertex vertexes[4];
+        for (size_t i = 0; i < 4; ++i) {
+            vertexShader(vertex_buf[i], vertexes[i]);
+            vertexes[i].convertToWindowCoord();
         }
         
-        Fragment crtf;
-        Pixel crtp;
+        size_t frag_num = rasterizer->rasterize(vertexes);
         
-        rasterizer->init(v);
-        
-        while (rasterizer->rasterize(crtf)) {
-            fragmentShader(crtf, uniform, crtp);
-            wc->setPixel(crtp);
-        }        
+        vec4 color;
+        for (size_t i = 0; i < frag_num; ++i) {
+            fragmentShader(frags[i], uniform, color);
+            wc->setPixel(frags[i].position.x, frags[i].position.y, color);
+        }
+    }
+    
+    ~Pipeline() {
+        delete rasterizer;
+        delete[] frags;
     }
 };
 

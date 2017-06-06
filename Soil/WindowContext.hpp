@@ -23,14 +23,13 @@
 
 #include "vec.hpp"
 
-typedef std::pair<std::pair<int, int>, vec<4>> Pixel;
-
 class WindowContext {
 private:
     float *pixels_fg = nullptr, *pixels_bg = nullptr;
     
-    double time = 0.0;
+    double lastFrameTime = 0.0;
     double fpsBoundary = 0.0;
+    double targetInterval;
     
     char title_buf[128];
     
@@ -79,18 +78,18 @@ private:
     
     void boundFPS() {
         if (fpsBoundary > 0) {
-            double targetInterval = 1 / fpsBoundary;
-            double currentInterval = glfwGetTime() - time;
-            int wait = int((targetInterval - currentInterval) * 1000000 * 0.97); // cut some idle time
-            if (wait > 0)
+            double now = glfwGetTime();
+            double currentInterval = now - lastFrameTime;
+            lastFrameTime = now;
+            int wait = int((targetInterval - currentInterval) * 1000000);
+            if (wait > 0) {
                 usleep(wait);
+            }
         }
     }
     
-    void updateTimer() {
-        double oldTime = time;
-        time = glfwGetTime();
-        double interval = time - oldTime;
+    void updateFPS() {
+        double interval = glfwGetTime() - lastFrameTime;
         double fps = 1 / interval;
         sprintf(title_buf, "%s - FPS: %.1f", title, fps);
         glfwSetWindowTitle(window, title_buf);
@@ -105,7 +104,7 @@ public:
         initWindow();
         clearPixel(pixels_fg);
         clearPixel(pixels_bg);
-        time = glfwGetTime();
+        lastFrameTime = glfwGetTime();
     }
     
     bool windowWillClose() {
@@ -113,32 +112,38 @@ public:
     }
     
     void presentScene() {
+        static int respondCount = 0, respondInterval = 3;
+        
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, pixels_fg);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glfwSwapBuffers(window);
-        glfwPollEvents();
         std::swap(pixels_fg, pixels_bg);
         clearPixel(pixels_bg);
+        updateFPS();
         boundFPS();
-        updateTimer();
+        
+        if (respondCount == 0) {
+            glfwPollEvents();
+        }
+        ++respondCount;
+        respondCount %= respondInterval;
     }
     
-    void setPixel(const Pixel &pixel) {
-        int x = pixel.first.first;
-        int y = pixel.first.second;
+    void setPixel(int x, int y, const vec4 &color) {
         assert(x >= 0 && x < width);
         assert(y >= 0 && y < height);
-        float *position = pixels_fg + (x + width * y) * 4;
+        vec4 *position = (vec4*)(pixels_fg + (x + width * y) * 4);
         
-        const vec<4> &rgba = pixel.second;
-        position[0] = rgba[0];
-        position[1] = rgba[1];
-        position[2] = rgba[2];
-        position[3] = rgba[3];
+        position->x = color.x;
+        position->y = color.y;
+        position->z = color.z;
+        position->w = color.w;
     }
     
     void setFPSBoundary(double fps) {
+        assert(fps > 0.0);
         fpsBoundary = fps;
+        targetInterval = 1 / fpsBoundary;
     }
     
     ~WindowContext() {
