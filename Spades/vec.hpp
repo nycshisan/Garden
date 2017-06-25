@@ -31,7 +31,7 @@ typedef union { \
         assert(i < SIZE); \
         return this->d[i]; \
     } \
-} vec##SIZE;
+} vec##SIZE __attribute__((aligned(16)));
 
 DEF_VEC(4);
 DEF_VEC(3);

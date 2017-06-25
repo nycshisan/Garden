@@ -17,6 +17,7 @@
 #include <utility>
 #include <unistd.h>
 #include <memory>
+#include <x86intrin.h>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -25,7 +26,7 @@
 
 class WindowContext {
 private:
-    float *pixels_fg = nullptr, *pixels_bg = nullptr;
+    GLfloat *pixels_fg = nullptr, *pixels_bg = nullptr;
     
     double lastFrameTime = 0.0;
     double fpsBoundary = 0.0;
@@ -72,8 +73,8 @@ private:
     
     bool initWindow();
     
-    void clearPixel(float *p) {
-        memset(p, 0, sizeof(float) * width * height * 4);
+    void clearPixel(GLfloat *p) {
+        memset(p, 0, sizeof(GLfloat) * width * height * 4);
     }
     
     void boundFPS() {
@@ -129,15 +130,12 @@ public:
         respondCount %= respondInterval;
     }
     
-    void setPixel(int x, int y, const vec4 &color) {
+    void setPixel(size_t x, size_t y, const vec4 &color) {
         assert(x >= 0 && x < width);
         assert(y >= 0 && y < height);
-        vec4 *position = (vec4*)(pixels_fg + (x + width * y) * 4);
+        GLfloat *position = (pixels_fg + (x + width * y) * 4);
         
-        position->x = color.x;
-        position->y = color.y;
-        position->z = color.z;
-        position->w = color.w;
+        _mm_stream_ps(position, _mm_load_ps(color.d));
     }
     
     void setFPSBoundary(double fps) {
@@ -209,9 +207,9 @@ bool WindowContext::initWindow() {
     GLint a_TexCoord_loc = glGetAttribLocation(program, "a_TexCoord");
     GLint u_Sampler_loc = glGetUniformLocation(program, "u_Sampler");
     glEnableVertexAttribArray(a_Position_loc);
-    glVertexAttribPointer(a_Position_loc, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (void*) 0);
+    glVertexAttribPointer(a_Position_loc, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4, (void*) 0);
     glEnableVertexAttribArray(a_TexCoord_loc);
-    glVertexAttribPointer(a_TexCoord_loc, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (void*) (sizeof(float) * 2));
+    glVertexAttribPointer(a_TexCoord_loc, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4, (void*) (sizeof(GLfloat) * 2));
     glUniform1i(u_Sampler_loc, 0);
     
     GLuint texture_id;

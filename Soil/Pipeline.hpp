@@ -53,11 +53,12 @@ public:
         }
         
         size_t frag_num = rasterizer->rasterize(vertexes);
+        Fragment *frag_end = frags + frag_num;
         
         vec4 color;
-        for (size_t i = 0; i < frag_num; ++i) {
-            fragmentShader(frags[i], uniform, color);
-            wc->setPixel(frags[i].position.x, frags[i].position.y, color);
+        for (Fragment *frag = frags; frag < frag_end; ++frag) {
+            fragmentShader(*frag, uniform, color);
+            wc->setPixel(frag->x, frag->y, color);
         }
     }
     

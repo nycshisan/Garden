@@ -51,11 +51,11 @@ int main(int argc, const char *argv[]) {
     p.vertex_buf.push_back(attr4);
     
     while (!wc->windowWillClose()) {
-        for (size_t i = 0; i < 4; ++i) {
-            for (size_t j = 0; j < 2; ++j) {
-                p.vertex_buf[i].pos[j] *= 0.995;
-            }
-        }
+//        for (size_t i = 0; i < 4; ++i) {
+//            for (size_t j = 0; j < 2; ++j) {
+//                p.vertex_buf[i].pos[j] *= 0.995;
+//            }
+//        }
         p.draw_rectangle();
         wc->presentScene();
     }

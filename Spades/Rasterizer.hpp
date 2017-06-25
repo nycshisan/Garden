@@ -29,11 +29,12 @@ public:
         size_t min_j = vertexes[0].position.y * height;
         size_t max_j = vertexes[2].position.y * height;
         
-        for (size_t i = min_i; i <= max_i; ++i) {
-            for (size_t j = min_j; j <= max_j; ++j) {
-                frags[count].position.x = i;
-                frags[count].position.y = j;
-                ++count;
+        Fragment *crt_frag = frags;
+        for (size_t i = min_i; i < max_i; ++i) {
+            for (size_t j = min_j; j < max_j; ++j) {
+                crt_frag->x = i;
+                crt_frag->y = j;
+                ++count; ++crt_frag;
             }
         }
         
