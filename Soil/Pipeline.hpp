@@ -9,6 +9,7 @@
 #ifndef Pipeline_hpp
 #define Pipeline_hpp
 
+#include "Macro.hpp"
 #include "WindowContext.hpp"
 #include "Vertex.hpp"
 #include "Fragment.hpp"
@@ -20,7 +21,7 @@
 #include <mutex>
 #include <functional>
 
-template <class Attribute, class Uniform>
+template <class Attribute, class Uniform, class Varying>
 class Pipeline {
 private:
     unsigned int width, height;
@@ -31,10 +32,16 @@ private:
     Fragment *frags;
     
 public:
-    std::vector<Attribute> vertex_buf;
-    //typename std::vector<Attribute>::iterator vertex_buf_iter = vertex_buf.begin();
-    std::vector<int> index_buf;
-    //std::vector<int>::iterator index_buf_iter = index_buf.begin();
+    enum drawType {
+        line,
+        rectangle,
+        triangle
+    };
+    
+    std::vector<Attribute> vertexBuffer;
+    typename std::vector<Attribute>::iterator vertexBufferIter = vertexBuffer.begin();
+    std::vector<int> indexBuffer;
+    std::vector<int>::iterator indexBufferIter = indexBuffer.begin();
     Uniform uniform;
     
     std::function<void(const Attribute &, Vertex &)> vertexShader;
@@ -48,7 +55,7 @@ public:
     void draw_rectangle() {
         Vertex vertexes[4];
         for (size_t i = 0; i < 4; ++i) {
-            vertexShader(vertex_buf[i], vertexes[i]);
+            vertexShader(vertexBuffer[i], vertexes[i]);
             vertexes[i].convertToWindowCoord();
         }
         
@@ -62,10 +69,17 @@ public:
         }
     }
     
+    void draw(drawType type);
+    
     ~Pipeline() {
         delete rasterizer;
         delete[] frags;
     }
 };
+
+template <class Attribute, class Uniform, class Varying>
+void Pipeline<Attribute, Uniform, Varying>::draw(drawType type) {
+    size_t vertexesNumber;
+}
 
 #endif /* Pipeline_hpp */

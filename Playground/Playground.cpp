@@ -10,50 +10,56 @@
 
 #include <memory>
 
-class Attribute_HR {
+#define CRT_TASK HL
+
+class Attribute_HL {
 public:
     vec4 pos;
 };
 
-class Uniform_HR {
+class Uniform_HL {
     
 };
 
-void fs(const Fragment &f, const Uniform_HR &u, vec4 &color) {
+class Varying_HL {
+    
+};
+
+void fs(const Fragment &f, const CrtUniform &u, vec4 &color) {
     color = {1.0, 1.0, 1.0, 1.0};
 }
 
-void vs(const Attribute_HR &a, Vertex &v) {
+void vs(const CrtAttribute &a, Vertex &v) {
     v.position = a.pos;
 }
 
 int main(int argc, const char *argv[]) {
     auto wc = new WindowContext(640, 480, "Garden");
     wc->setFPSBoundary(60.0);
-    Pipeline<Attribute_HR, Uniform_HR> p(wc);
+    Pipeline<CrtAttribute, CrtUniform, CrtVarying> p(wc);
     p.fragmentShader = fs;
     p.vertexShader = vs;
     
-    Attribute_HR attr1;
+    CrtAttribute attr1;
     attr1.pos = {-1.0, 1.0, 0.0, 1.0};
-    p.vertex_buf.push_back(attr1);
+    p.vertexBuffer.push_back(attr1);
     
-    Attribute_HR attr2;
+    CrtAttribute attr2;
     attr2.pos = {-1.0, -1.0, 0.0, 1.0};
-    p.vertex_buf.push_back(attr2);
+    p.vertexBuffer.push_back(attr2);
     
-    Attribute_HR attr3;
+    CrtAttribute attr3;
     attr3.pos = {1.0, -1.0, 0.0, 1.0};
-    p.vertex_buf.push_back(attr3);
+    p.vertexBuffer.push_back(attr3);
     
-    Attribute_HR attr4;
+    CrtAttribute attr4;
     attr4.pos = {1.0, 1.0, 0.0, 1.0};
-    p.vertex_buf.push_back(attr4);
+    p.vertexBuffer.push_back(attr4);
     
     while (!wc->windowWillClose()) {
 //        for (size_t i = 0; i < 4; ++i) {
 //            for (size_t j = 0; j < 2; ++j) {
-//                p.vertex_buf[i].pos[j] *= 0.995;
+//                p.vertexBuffer[i].pos[j] *= 0.995;
 //            }
 //        }
         p.draw_rectangle();
