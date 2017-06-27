@@ -14,7 +14,7 @@
 class Fragment {
 public:
     vec4 position;
-    size_t x, y;
+    size_t pixelX, pixelY;
 };
 
 #endif /* Fragment_h */

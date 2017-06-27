@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <memory>
+#include <cmath>
 
 #include "Fragment.hpp"
 
@@ -18,6 +19,7 @@ enum drawType {
     Point,
     Line,
     LineStrip,
+    LineLoop,
     Triangle,
     TriangleStrip,
     TriangleFan
@@ -28,6 +30,7 @@ class Rasterizer {
     
     Fragment *frags;
     
+    size_t rasterizePoint(Vertex **vertexPtrs);
     size_t rasterizeLine(Vertex **vertexPtrs);
     size_t rasterizeTriangle(Vertex **VertexPtrs);
     
@@ -58,16 +61,44 @@ public:
 
 inline size_t Rasterizer::rasterize(drawType type, Vertex **vertexPtrs) {
     switch (type) {
+        case Point:
+            return rasterizePoint(vertexPtrs);
         case Line:
+        case LineStrip:
+        case LineLoop:
             return rasterizeLine(vertexPtrs);
-            break;
         case Triangle:
+        case TriangleStrip:
+        case TriangleFan:
             return rasterizeTriangle(vertexPtrs);
-            break;
             
         default:
             fatalError("Unknown draw type"); // Should never reach here
     }
+}
+
+size_t Rasterizer::rasterizePoint(Vertex **vertexPtrs) {
+    size_t count = 0;
+    Vertex *vertex = vertexPtrs[0];
+    vertex->convertToWindowCoord();
+    int pointSize = vertex->pointSize;
+    
+    // Simple offset to the top left point; need to be improved
+    int radius = pointSize / 2;
+    size_t leftX = (size_t)std::round(vertex->windowX * width) - radius;
+    size_t rightX = leftX + pointSize;
+    size_t topY = (size_t)std::round(vertex->windowY * height) - radius;
+    size_t BottomY = topY + pointSize;
+    
+    Fragment *crtFrag = frags;
+    for (size_t i = leftX; i < rightX; ++i) {
+        for (size_t j = topY; j < BottomY; ++j) {
+            crtFrag->pixelX = i;
+            crtFrag->pixelY = j;
+            ++count; ++crtFrag;
+        }
+    }
+    return count;
 }
 
 size_t Rasterizer::rasterizeLine(Vertex **vertexPtrs) {

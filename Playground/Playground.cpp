@@ -10,22 +10,22 @@
 
 #include <memory>
 
-#define CRT_TASK HL
+#define CRT_TASK HelloPoint
 
-#define CrtAttribute CONCAT(Attribute_, CRT_TASK)
-#define CrtUniform CONCAT(Uniform_, CRT_TASK)
-#define CrtVarying CONCAT(Varying_, CRT_TASK)
+#define CrtAttribute CONCAT(Attribute, CRT_TASK)
+#define CrtUniform CONCAT(Uniform, CRT_TASK)
+#define CrtVarying CONCAT(Varying, CRT_TASK)
 
-class Attribute_HL {
+class AttributeHelloPoint {
 public:
     vec4 pos;
 };
 
-class Uniform_HL {
+class UniformHelloPoint {
     
 };
 
-class Varying_HL {
+class VaryingHelloPoint {
     
 };
 
@@ -35,6 +35,7 @@ void fs(const Fragment &f, const CrtUniform &u, vec4 &color) {
 
 void vs(const CrtAttribute &a, Vertex &v) {
     v.position = a.pos;
+    v.pointSize = 100;
 }
 
 int main(int argc, const char *argv[]) {
@@ -45,28 +46,16 @@ int main(int argc, const char *argv[]) {
     p.vertexShader = vs;
     
     CrtAttribute attr1;
-    attr1.pos = {-1.0, 1.0, 0.0, 1.0};
+    attr1.pos = {-0.5, 0.5, 0.0, 1.0};
     p.vertexBuffer.push_back(attr1);
     
     CrtAttribute attr2;
-    attr2.pos = {-1.0, -1.0, 0.0, 1.0};
+    attr2.pos = {0.5, -0.5, 0.0, 1.0};
     p.vertexBuffer.push_back(attr2);
     
-    CrtAttribute attr3;
-    attr3.pos = {1.0, -1.0, 0.0, 1.0};
-    p.vertexBuffer.push_back(attr3);
-    
-    CrtAttribute attr4;
-    attr4.pos = {1.0, 1.0, 0.0, 1.0};
-    p.vertexBuffer.push_back(attr4);
     
     while (!wc->windowWillClose()) {
-//        for (size_t i = 0; i < 4; ++i) {
-//            for (size_t j = 0; j < 2; ++j) {
-//                p.vertexBuffer[i].pos[j] *= 0.995;
-//            }
-//        }
-//        p.draw_rectangle();
+        p.draw(Point);
         wc->presentScene();
     }
     

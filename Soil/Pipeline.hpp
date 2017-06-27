@@ -59,10 +59,24 @@ public:
 template <class Attribute, class Uniform, class Varying>
 void Pipeline<Attribute, Uniform, Varying>::draw(drawType type) {
     size_t vertexNumber;
+    bool isStrip = false, isFan = false, isLoop = false;
     switch (type) {
+        case Point:
+            vertexNumber = 1;
+            break;
+            
+        case LineLoop:
+            isLoop = true;
+        case LineStrip:
+            isStrip = true;
         case Line:
             vertexNumber = 2;
             break;
+            
+        case TriangleFan:
+            isFan = true;
+        case TriangleStrip:
+            isStrip = true;
         case Triangle:
             vertexNumber = 3;
             break;
@@ -75,27 +89,48 @@ void Pipeline<Attribute, Uniform, Varying>::draw(drawType type) {
     
     Vertex vertexPool[vertexNumber]; // Store the materials of vertexes
     Vertex *vertexPtrs[vertexNumber]; // Store the pointers of vertexes for rasterizer
+    size_t crtVertexPoolIndex; // Index of vertex pointer to be filled for striped drawing
     
     // Setup
     vertexBufferIter = vertexBuffer.begin();
-    for (size_t i = 1; i < vertexNumber; ++i) {
-        vertexShader(*(vertexBufferIter++), vertexPool[i]);
-        vertexPtrs[i] = &vertexPool[i];
+    if (isStrip) {
+        fatalError("unimplemented");
+        vertexBufferIter = vertexBuffer.begin();
+        for (size_t i = 1; i < vertexNumber; ++i) {
+            vertexShader(*(vertexBufferIter++), vertexPool[i]);
+            vertexPtrs[i] = &vertexPool[i];
+        }
+        // At the beginging, the poll are fully materialized except the first slot
+        crtVertexPoolIndex = 0;
+
+    } else {
+        // For Point, Line and Triangle, vertex pointers are static
+        for (size_t i = 0; i < vertexNumber; ++i) {
+            vertexPtrs[i] = vertexPool + i;
+        }
     }
-    // At the beginging, the poll are fully materialized except the first slot
-    size_t crtVertexPoolIndex = 0;
+    
     
     // Mainloop
     while (vertexBufferIter != vertexBuffer.end()) {
-        // L-shift the vertex pointers
-        for (size_t i = 0; i < vertexNumber - 1; ++i) {
-            vertexPtrs[i] = vertexPtrs[i + 1];
+        // Make vertexes
+        if (isStrip) {
+            fatalError("unimplemented");
+            // L-shift the vertex pointers
+            for (size_t i = 0; i < vertexNumber - 1; ++i) {
+                vertexPtrs[i] = vertexPtrs[i + 1];
+            }
+            
+            // Fill the last pointer
+            vertexShader(*(vertexBufferIter++), vertexPool[crtVertexPoolIndex]);
+            vertexPtrs[vertexNumber - 1] = vertexPool + crtVertexPoolIndex;
+            crtVertexPoolIndex = (crtVertexPoolIndex + 1) % vertexNumber;
+        } else {
+            // For Point, Line and Triangle, just get new vertexes
+            for (size_t i = 0; i < vertexNumber; ++i) {
+                vertexShader(*(vertexBufferIter++), vertexPool[i]);
+            }
         }
-        
-        // Fill the last pointer
-        vertexShader(*(vertexBufferIter++), vertexPool[crtVertexPoolIndex]);
-        vertexPtrs[vertexNumber - 1] = vertexPool + crtVertexPoolIndex;
-        crtVertexPoolIndex = (crtVertexPoolIndex + 1) % vertexNumber;
         
         // Rasterize
         size_t fragNumber = rasterizer->rasterize(type, vertexPtrs);
@@ -105,7 +140,7 @@ void Pipeline<Attribute, Uniform, Varying>::draw(drawType type) {
         vec4 color;
         for (Fragment *frag = frags; frag < fragEnd; ++frag) {
             fragmentShader(*frag, uniform, color);
-            wc->setPixel(frag->x, frag->y, color);
+            wc->setPixel(frag->pixelX, frag->pixelY, color);
         }
     }
 }
