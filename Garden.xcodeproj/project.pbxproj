@@ -29,7 +29,7 @@
 		A5323F591EB9AE6800532E6F /* Rasterizer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Rasterizer.hpp; path = Spades/Rasterizer.hpp; sourceTree = "<group>"; };
 		A5323F5A1EB9AE9400532E6F /* Vertex.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Vertex.hpp; path = Spades/Vertex.hpp; sourceTree = "<group>"; };
 		A5323F5B1EB9AEA600532E6F /* Fragment.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Fragment.hpp; path = Spades/Fragment.hpp; sourceTree = "<group>"; };
-		A5323F5D1EB9B22600532E6F /* vec.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = vec.hpp; path = Spades/vec.hpp; sourceTree = "<group>"; };
+		A5323F5D1EB9B22600532E6F /* Vec.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Vec.hpp; path = Spades/Vec.hpp; sourceTree = "<group>"; };
 		A53E83051EB1FF37002BA1D5 /* libGLEW.2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.0.0.dylib; path = ../../../../../../usr/local/lib/libGLEW.2.0.0.dylib; sourceTree = "<group>"; };
 		A53E83111EB20221002BA1D5 /* Playground */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Playground; sourceTree = BUILT_PRODUCTS_DIR; };
 		A53E83131EB20221002BA1D5 /* Playground.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Playground.cpp; sourceTree = "<group>"; };
@@ -37,7 +37,7 @@
 		A53E831A1EB2E91C002BA1D5 /* Pipeline.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Pipeline.hpp; path = Soil/Pipeline.hpp; sourceTree = SOURCE_ROOT; };
 		A5C25FCC1EB1FEE7002738A1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		A5C25FCE1EB1FEFF002738A1 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../usr/local/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
-		A5F1CCDC1EFFD13700180000 /* Macro.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Macro.hpp; path = Fertilizer/Macro.hpp; sourceTree = "<group>"; };
+		A5F1CCDC1EFFD13700180000 /* Helper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Helper.hpp; path = Fertilizer/Helper.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +60,7 @@
 				A5323F591EB9AE6800532E6F /* Rasterizer.hpp */,
 				A5323F5A1EB9AE9400532E6F /* Vertex.hpp */,
 				A5323F5B1EB9AEA600532E6F /* Fragment.hpp */,
-				A5323F5D1EB9B22600532E6F /* vec.hpp */,
+				A5323F5D1EB9B22600532E6F /* Vec.hpp */,
 			);
 			name = Spades;
 			sourceTree = "<group>";
@@ -124,7 +124,7 @@
 		A5F1CCDA1EFFD0F200180000 /* Fertilizers */ = {
 			isa = PBXGroup;
 			children = (
-				A5F1CCDC1EFFD13700180000 /* Macro.hpp */,
+				A5F1CCDC1EFFD13700180000 /* Helper.hpp */,
 			);
 			name = Fertilizers;
 			sourceTree = "<group>";

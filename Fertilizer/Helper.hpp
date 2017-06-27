@@ -13,8 +13,9 @@
 #define CONCAT_LITERAL(L, R) L##R
 #define CONCAT(L, R) CONCAT_LITERAL(L, R)
 
-#define CrtAttribute CONCAT(Attribute_, CRT_TASK)
-#define CrtUniform CONCAT(Uniform_, CRT_TASK)
-#define CrtVarying CONCAT(Varying_, CRT_TASK)
+#define fatalError(MSG) do {\
+    printf(MSG);\
+    assert(0);\
+} while(0)
 
 #endif /* Macro_h */

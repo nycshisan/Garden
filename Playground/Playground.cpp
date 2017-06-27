@@ -12,6 +12,10 @@
 
 #define CRT_TASK HL
 
+#define CrtAttribute CONCAT(Attribute_, CRT_TASK)
+#define CrtUniform CONCAT(Uniform_, CRT_TASK)
+#define CrtVarying CONCAT(Varying_, CRT_TASK)
+
 class Attribute_HL {
 public:
     vec4 pos;
@@ -62,7 +66,7 @@ int main(int argc, const char *argv[]) {
 //                p.vertexBuffer[i].pos[j] *= 0.995;
 //            }
 //        }
-        p.draw_rectangle();
+//        p.draw_rectangle();
         wc->presentScene();
     }
     

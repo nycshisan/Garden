@@ -9,7 +9,7 @@
 #ifndef Fragment_h
 #define Fragment_h
 
-#include "vec.hpp"
+#include "Vec.hpp"
 
 class Fragment {
 public:

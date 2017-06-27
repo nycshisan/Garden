@@ -9,7 +9,7 @@
 #ifndef Vertex_h
 #define Vertex_h
 
-#include "vec.hpp"
+#include "Vec.hpp"
 
 class Vertex {
 public:
