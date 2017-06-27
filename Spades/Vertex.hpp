@@ -12,12 +12,16 @@
 #include "Vec.hpp"
 
 class Vertex {
+    friend class Rasterizer;
+    data_t windowX, windowY;
+    
 public:
     vec4 position;
+    int pointSize = 1;
     
     void convertToWindowCoord() {
-        position.x = (position.x + 1.0) / 2;
-        position.y = -(position.y - 1.0) / 2;
+        windowX = (position.x + 1.0) / 2;
+        windowY = -(position.y - 1.0) / 2;
     }
 };
 
