@@ -36,7 +36,10 @@ private:
         v.convertToWindowCoord();
     }
     
+    void drawWithVertexPtrs(DrawType type, Vertex **vertexPtrs);
+    
 public:
+    data_t zClippingFrontSurface = NAN, zClippingBackSurface = NAN;
     
     std::vector<Attribute> vertexBuffer;
     typename std::vector<Attribute>::iterator vertexBufferIter;
@@ -53,8 +56,8 @@ public:
         this->rasterizer = new Rasterizer(width, height, frags);
     }
     
-    void draw(drawType type);
-    void drawElement(drawType type);
+    void draw(DrawType type);
+    void drawElement(DrawType type);
     
     ~Pipeline() {
         delete rasterizer;
@@ -63,7 +66,7 @@ public:
 };
 
 template <class Attribute, class Uniform, class Varying>
-void Pipeline<Attribute, Uniform, Varying>::draw(drawType type) {
+void Pipeline<Attribute, Uniform, Varying>::draw(DrawType type) {
     size_t vertexNumber;
     bool isStrip = false, isFan = false, isLoop = false;
     switch (type) {
@@ -91,14 +94,19 @@ void Pipeline<Attribute, Uniform, Varying>::draw(drawType type) {
             fatalError("Unknown draw type"); // Should never reach here
     }
     
-    assert(vertexBuffer.size() >= vertexNumber && vertexBuffer.size() % vertexNumber == 0);
+    assert(vertexBuffer.size() >= vertexNumber); // Check buffer size
     
     Vertex vertexPool[vertexNumber]; // Store the materials of vertexes
     Vertex *vertexPtrs[vertexNumber]; // Store the pointers of vertexes for rasterizer
     
-    size_t crtVertexPoolIndex; // Index of vertex pointer to be filled for striping drawing
+    // Index of vertex pointer to be filled for striping drawing.
+    // Initialize it with -1 to slience warnings, but it will be really initialized before being used.
+    size_t crtVertexPoolIndex = -1;
     
-    // Masks for TriangleFan drawing, striping draw should use these masks rather than the original arrays
+    // The pointer of the first vertex for LineLoop drawing
+    Vertex *firstVertex = nullptr;
+    
+    // Masks for TriangleFan drawing. Striping drawing should use these masks rather than the original arrays
     Vertex *vertexPoolMask = vertexPool;
     Vertex **vertexPtrsMask = vertexPtrs;
     
@@ -108,20 +116,32 @@ void Pipeline<Attribute, Uniform, Varying>::draw(drawType type) {
         // Set up the begining vertex pool for striping drawing
         if (isFan) {
             fatalError("unimplemented");
+            // The first vertex(centroid) are static, and the others are the same as striping drawing.
+            --vertexNumber;
+            ++vertexPoolMask;
+            ++vertexPtrsMask;
         }
-        fatalError("unimplemented");
+        
         // At the beginging, the poll are fully materialized except the first slot
         for (size_t i = 1; i < vertexNumber; ++i) {
             makeVertex(vertexBufferIter, vertexPoolMask[i]);
             vertexPtrsMask[i] = &vertexPoolMask[i];
         }
         crtVertexPoolIndex = 0;
+        
+        if (isLoop) {
+            // Store the first vertex information for LineLoop drawing.
+            // Now the first vertex locates in the second(index 1) slot in the vertex pool
+            firstVertex = new Vertex(vertexPoolMask[1]);
+        }
 
     } else {
         // For Point, Line and Triangle, vertex pointers are static
         for (size_t i = 0; i < vertexNumber; ++i) {
             vertexPtrs[i] = vertexPool + i;
         }
+        // Buffer size must be a mutiple of vertex number
+        assert(vertexBuffer.size() % vertexNumber == 0);
     }
     
     
@@ -129,7 +149,6 @@ void Pipeline<Attribute, Uniform, Varying>::draw(drawType type) {
     while (vertexBufferIter != vertexBuffer.end()) {
         // Make vertexes
         if (isStrip) {
-            fatalError("unimplemented");
             // L-shift the vertex pointers
             for (size_t i = 0; i < vertexNumber - 1; ++i) {
                 vertexPtrsMask[i] = vertexPtrsMask[i + 1];
@@ -147,26 +166,52 @@ void Pipeline<Attribute, Uniform, Varying>::draw(drawType type) {
             }
         }
         
-        // Rasterize
-        size_t fragNumber = rasterizer->rasterize(type, vertexPtrs);
+        drawWithVertexPtrs(type, vertexPtrs);
+    }
+    
+    // The last edge for LineLoop drawing
+    if (isLoop) {
+        // The pointer of the last vertex is always the last element of vertexPtrs
+        Vertex *lastVertex = vertexPtrsMask[vertexNumber - 1];
         
-        // Shade fragments
-        Fragment *fragEnd = frags + fragNumber;
-        vec4 color;
-        for (Fragment *frag = frags; frag < fragEnd; ++frag) {
-            coord_t pixelX = frag->pixelX, pixelY = frag->pixelY;
-            // Clipping
-            if (pixelX < width && pixelY < height) {
-                fragmentShader(*frag, uniform, color);
-                wc->setPixel(pixelX, pixelY, color);
-            }
-        }
+        Vertex *lastVertexPtrs[vertexNumber];
+        lastVertexPtrs[0] = lastVertex; lastVertexPtrs[1] = firstVertex;
+        
+        drawWithVertexPtrs(type, lastVertexPtrs);
+        
+        delete firstVertex;
     }
 }
 
 template <class Attribute, class Uniform, class Varying>
-void Pipeline<Attribute, Uniform, Varying>::drawElement(drawType type) {
+void Pipeline<Attribute, Uniform, Varying>::drawElement(DrawType type) {
     fatalError("Unimplemented");
+}
+
+template <class Attribute, class Uniform, class Varying>
+void Pipeline<Attribute, Uniform, Varying>::drawWithVertexPtrs(DrawType type, Vertex **vertexPtrs) {
+    // Rasterize
+    size_t fragNumber = rasterizer->rasterize(type, vertexPtrs);
+    
+    // Shade fragments
+    Fragment *fragEnd = frags + fragNumber;
+    vec4 color;
+    for (Fragment *frag = frags; frag < fragEnd; ++frag) {
+        coord_t pixelX = frag->pixelX, pixelY = frag->pixelY;
+        // Clipping
+        if (pixelX >= width || pixelY >= height) {
+            continue;
+        }
+        if (!isnan(zClippingFrontSurface) && frag->fragZ > zClippingFrontSurface) {
+            continue;
+        }
+        if (!isnan(zClippingBackSurface) && frag->fragZ < zClippingFrontSurface) {
+            continue;
+        }
+        
+        fragmentShader(*frag, uniform, color);
+        wc->setPixel(pixelX, pixelY, color);
+    }
 }
 
 #endif /* Pipeline_hpp */

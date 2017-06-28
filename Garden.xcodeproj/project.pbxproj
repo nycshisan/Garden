@@ -40,6 +40,8 @@
 		A5F1CCDD1F0296EA00180000 /* Helper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Helper.hpp; path = Fertilizers/Helper.hpp; sourceTree = "<group>"; };
 		A5F1CCDE1F029F5700180000 /* HelloPoints.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HelloPoints.hpp; path = Seeds/HelloPoints.hpp; sourceTree = "<group>"; };
 		A5F1CCE01F02B83B00180000 /* HelloLines.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HelloLines.hpp; path = Seeds/HelloLines.hpp; sourceTree = "<group>"; };
+		A5F1CCE11F03AC0400180000 /* LineStripAndLineLoop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = LineStripAndLineLoop.hpp; path = Seeds/LineStripAndLineLoop.hpp; sourceTree = "<group>"; };
+		A5F1CCE21F03B67F00180000 /* ClippingAndZTest.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ClippingAndZTest.hpp; path = Seeds/ClippingAndZTest.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,8 @@
 			children = (
 				A5F1CCDE1F029F5700180000 /* HelloPoints.hpp */,
 				A5F1CCE01F02B83B00180000 /* HelloLines.hpp */,
+				A5F1CCE11F03AC0400180000 /* LineStripAndLineLoop.hpp */,
+				A5F1CCE21F03B67F00180000 /* ClippingAndZTest.hpp */,
 			);
 			name = Seeds;
 			sourceTree = "<group>";

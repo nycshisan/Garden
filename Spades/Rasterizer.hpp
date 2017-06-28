@@ -15,7 +15,7 @@
 
 #include "Fragment.hpp"
 
-enum drawType {
+enum DrawType {
     Points,
     Lines,
     LineStrip,
@@ -44,10 +44,10 @@ class Rasterizer {
 public:
     Rasterizer(unsigned int width, unsigned int height, Fragment *frags): width(width), height(height), frags(frags) {}
     
-    inline size_t rasterize(drawType type, Vertex **vertexPtrs);
+    inline size_t rasterize(DrawType type, Vertex **vertexPtrs);
 };
 
-inline size_t Rasterizer::rasterize(drawType type, Vertex **vertexPtrs) {
+inline size_t Rasterizer::rasterize(DrawType type, Vertex **vertexPtrs) {
     switch (type) {
         case Points:
             return rasterizePoint(vertexPtrs);

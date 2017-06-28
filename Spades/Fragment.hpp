@@ -13,8 +13,8 @@
 
 class Fragment {
 public:
-    vec4 position;
     coord_t pixelX, pixelY;
+    data_t fragZ;
 };
 
 #endif /* Fragment_h */
