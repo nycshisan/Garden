@@ -9,37 +9,35 @@
 #ifndef HelloPoints_h
 #define HelloPoints_h
 
-#define DrawType Points
-
 class Attribute {
 public:
     vec4 pos;
 };
 
-class Uniform {
-    
-};
+class Uniform {};
 
-class Varying {
-    
-};
+class Varying {};
 
-void vertexShader(const Attribute &a, Vertex &v) {
+VS {
     v.position = a.pos;
     v.pointSize = 100;
 }
 
-void fragmentShader(const Fragment &f, const Uniform &u, vec4 &color) {
+FS {
     color = {1.0, 1.0, 1.0, 1.0};
 }
 
-void prepare(Pipeline<Attribute, Uniform, Varying> &pipeline) {
+PREPARE {
     Attribute attr;
     
     attr.pos = {-0.5, 0.5, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
     attr.pos = {0.5, -0.5, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
+}
+
+DRAW {
+    pipeline.draw(Points);
 }
 
 #endif /* HelloPoints_h */

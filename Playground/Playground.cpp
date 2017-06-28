@@ -21,7 +21,7 @@ int main(int argc, const char *argv[]) {
     prepare(pipeline);
     
     while (!wc->windowWillClose()) {
-        pipeline.draw(DrawType);
+        draw(pipeline);
         wc->presentScene();
     }
     

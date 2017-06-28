@@ -18,4 +18,10 @@
     assert(0);\
 } while(0)
 
+// Common definitions for seeds
+#define VS void vertexShader(const Attribute &a, Vertex &v)
+#define FS void fragmentShader(const Fragment &f, const Uniform &u, vec4 &color)
+#define PREPARE void prepare(Pipeline<Attribute, Uniform, Varying> &pipeline)
+#define DRAW void draw(Pipeline<Attribute, Uniform, Varying> &pipeline)
+
 #endif /* Helper_h */

@@ -9,32 +9,48 @@
 #ifndef HelloLines_h
 #define HelloLines_h
 
-#define DrawType Lines
-
 class Attribute {
 public:
     vec4 pos;
 };
 
-class Uniform {
-    
-};
+class Uniform {};
 
-class Varying {
-    
-};
+class Varying {};
 
-void vertexShader(const Attribute &a, Vertex &v) {
+VS {
     v.position = a.pos;
 }
 
-void fragmentShader(const Fragment &f, const Uniform &u, vec4 &color) {
+FS {
     color = {1.0, 1.0, 1.0, 1.0};
 }
 
-void prepare(Pipeline<Attribute, Uniform, Varying> &pipeline) {
+PREPARE {
     Attribute attr;
     
+    // Axes
+    attr.pos = {0.0, 0.0, 0.0, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    attr.pos = {0.0, 0.5, 0.0, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    
+    attr.pos = {0.0, 0.0, 0.0, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    attr.pos = {0.5, 0.0, 0.0, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    
+    attr.pos = {0.0, 0.0, 0.0, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    attr.pos = {0.0, -0.5, 0.0, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    
+    attr.pos = {0.0, 0.0, 0.0, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    attr.pos = {-0.5, 0.0, 0.0, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    
+    // First quadrant
     attr.pos = {0.0, 0.0, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
     attr.pos = {0.5, 0.5, 0.0, 1.0};
@@ -50,41 +66,7 @@ void prepare(Pipeline<Attribute, Uniform, Varying> &pipeline) {
     attr.pos = {0.25, 0.5, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
     
-    attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    attr.pos = {0.0, 0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    
-    attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    attr.pos = {0.5, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    
-    attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    attr.pos = {-0.5, -0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    
-    attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    attr.pos = {-0.5, -0.25, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    
-    attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    attr.pos = {-0.25, -0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    
-    attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    attr.pos = {0.0, -0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    
-    attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    attr.pos = {-0.5, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    
+    // Second quadrant
     attr.pos = {0.0, 0.0, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
     attr.pos = {-0.5, 0.5, 0.0, 1.0};
@@ -100,16 +82,23 @@ void prepare(Pipeline<Attribute, Uniform, Varying> &pipeline) {
     attr.pos = {-0.25, 0.5, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
     
+    // Third quadrant
     attr.pos = {0.0, 0.0, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
-    attr.pos = {0.0, 0.5, 0.0, 1.0};
+    attr.pos = {-0.5, -0.5, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
     
     attr.pos = {0.0, 0.0, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
-    attr.pos = {-0.5, 0.0, 0.0, 1.0};
+    attr.pos = {-0.5, -0.25, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
     
+    attr.pos = {0.0, 0.0, 0.0, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    attr.pos = {-0.25, -0.5, 0.0, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    
+    // Fourth quadrant
     attr.pos = {0.0, 0.0, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
     attr.pos = {0.5, -0.5, 0.0, 1.0};
@@ -124,16 +113,10 @@ void prepare(Pipeline<Attribute, Uniform, Varying> &pipeline) {
     pipeline.vertexBuffer.push_back(attr);
     attr.pos = {0.25, -0.5, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
-    
-    attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    attr.pos = {0.0, -0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    
-    attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
-    attr.pos = {0.5, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+}
+
+DRAW {
+    pipeline.draw(Lines);
 }
 
 #endif /* HelloLines_h */

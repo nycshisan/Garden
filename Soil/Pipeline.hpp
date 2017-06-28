@@ -48,8 +48,9 @@ public:
     std::function<void(const Fragment &, const Uniform &, vec4 &)> fragmentShader;
     
     Pipeline(WindowContext *wc): wc(wc) {
-        this->frags = new Fragment[wc->width * wc->height];
-        this->rasterizer = new Rasterizer(wc->width, wc->height, frags);
+        this->width = wc->width; this->height = wc->height;
+        this->frags = new Fragment[width * height];
+        this->rasterizer = new Rasterizer(width, height, frags);
     }
     
     void draw(drawType type);
@@ -153,8 +154,12 @@ void Pipeline<Attribute, Uniform, Varying>::draw(drawType type) {
         Fragment *fragEnd = frags + fragNumber;
         vec4 color;
         for (Fragment *frag = frags; frag < fragEnd; ++frag) {
-            fragmentShader(*frag, uniform, color);
-            wc->setPixel(frag->pixelX, frag->pixelY, color);
+            coord_t pixelX = frag->pixelX, pixelY = frag->pixelY;
+            // Clipping
+            if (pixelX < width && pixelY < height) {
+                fragmentShader(*frag, uniform, color);
+                wc->setPixel(pixelX, pixelY, color);
+            }
         }
     }
 }
