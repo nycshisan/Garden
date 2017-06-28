@@ -89,19 +89,57 @@ size_t Rasterizer::rasterizePoint(Vertex **vertexPtrs) {
 }
 
 size_t Rasterizer::rasterizeLine(Vertex **vertexPtrs) {
-    Vertex *leftVertex = vertexPtrs[0], *rightVertex = vertexPtrs[1];
+    // Setup
+    coord_t pixelXA = getPixelX(vertexPtrs[0]), pixelXB = getPixelX(vertexPtrs[1]), pixelYA = getPixelY(vertexPtrs[0]), pixelYB = getPixelY(vertexPtrs[1]);
+    int dx = pixelXB - pixelXA, dy = pixelYB - pixelYA;
+    int stepX = dx > 0 ? 1 : -1, stepY = dy > 0 ? 1 : -1;
+    dx = abs(dx); dy = abs(dy);
     
-    // Ensure the left vertex has the smaller x-coordinate
-    coord_t leftPixelX = getPixelX(leftVertex), rightPixelX = getPixelY(rightVertex);
-    if (leftPixelX > rightPixelX) {
-        std::swap(leftVertex, rightVertex);
-        std::swap(leftPixelX, rightPixelX);
+    int error = 0;
+    
+    coord_t crtX = pixelXA, crtY = pixelYA;
+    
+    coord_t *indepCoordPtr, *depCoordPtr, stepEnd;
+    int errorStep, errorThreshold, *indepStepPtr, *depStepPtr;
+    
+    if (dx > dy) {
+        // |k| < 1, step by x
+        indepCoordPtr = &crtX;
+        indepStepPtr = &stepX;
+        depCoordPtr = &crtY;
+        depStepPtr = &stepY;
+        stepEnd = pixelXB + stepX;
+        errorStep = 2 * dy;
+        errorThreshold = 2 * dx;
+    } else {
+        // |k| >= 1, step by y
+        indepCoordPtr = &crtY;
+        indepStepPtr = &stepY;
+        depCoordPtr = &crtX;
+        depStepPtr = &stepX;
+        stepEnd = pixelYB + stepY;
+        errorStep = 2 * dx;
+        errorThreshold = 2 * dy;
     }
     
-    coord_t leftPixelY = getPixelY(leftVertex), rightPixelY = getPixelY(rightVertex);
-    
-    
     size_t count = 0;
+    Fragment *crtFrag = frags;
+    
+    // Bresenham algorithm
+    do {
+        crtFrag->pixelX = crtX;
+        crtFrag->pixelY = crtY;
+        
+        ++crtFrag; ++count;
+        
+        *indepCoordPtr += *indepStepPtr;
+        error += errorStep;
+        if (error >= errorThreshold) {
+            *depCoordPtr += *depStepPtr;
+            error -= errorThreshold;
+        }
+    } while (*indepCoordPtr != stepEnd);
+    
     return count;
 }
 

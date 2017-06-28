@@ -8,10 +8,11 @@
 
 #include "Pipeline.hpp"
 
-#include "HelloPoints.hpp"
+//#include "HelloPoints.hpp"
+#include "HelloLines.hpp"
 
 int main(int argc, const char *argv[]) {
-    auto wc = new WindowContext(640, 480, "Garden");
+    auto wc = new WindowContext(600, 600, "Garden");
     wc->setFPSBoundary(60.0);
     Pipeline<Attribute, Uniform, Varying> pipeline(wc);
     pipeline.vertexShader = vertexShader;

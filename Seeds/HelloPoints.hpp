@@ -34,13 +34,12 @@ void fragmentShader(const Fragment &f, const Uniform &u, vec4 &color) {
 }
 
 void prepare(Pipeline<Attribute, Uniform, Varying> &pipeline) {
-    Attribute attr1;
-    attr1.pos = {-0.5, 0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr1);
+    Attribute attr;
     
-    Attribute attr2;
-    attr2.pos = {0.5, -0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr2);
+    attr.pos = {-0.5, 0.5, 0.0, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    attr.pos = {0.5, -0.5, 0.0, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
 }
 
 #endif /* HelloPoints_h */
