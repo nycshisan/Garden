@@ -31,6 +31,11 @@ private:
     
     Fragment *frags;
     
+    void makeVertex(typename std::vector<Attribute>::iterator &iter, Vertex &v) {
+        vertexShader(*(iter++), v);
+        v.convertToWindowCoord();
+    }
+    
 public:
     
     std::vector<Attribute> vertexBuffer;
@@ -61,7 +66,7 @@ void Pipeline<Attribute, Uniform, Varying>::draw(drawType type) {
     size_t vertexNumber;
     bool isStrip = false, isFan = false, isLoop = false;
     switch (type) {
-        case Point:
+        case Points:
             vertexNumber = 1;
             break;
             
@@ -69,7 +74,7 @@ void Pipeline<Attribute, Uniform, Varying>::draw(drawType type) {
             isLoop = true;
         case LineStrip:
             isStrip = true;
-        case Line:
+        case Lines:
             vertexNumber = 2;
             break;
             
@@ -77,7 +82,7 @@ void Pipeline<Attribute, Uniform, Varying>::draw(drawType type) {
             isFan = true;
         case TriangleStrip:
             isStrip = true;
-        case Triangle:
+        case Triangles:
             vertexNumber = 3;
             break;
             
@@ -85,22 +90,30 @@ void Pipeline<Attribute, Uniform, Varying>::draw(drawType type) {
             fatalError("Unknown draw type"); // Should never reach here
     }
     
-    assert(vertexBuffer.size() >= vertexNumber);
+    assert(vertexBuffer.size() >= vertexNumber && vertexBuffer.size() % vertexNumber == 0);
     
     Vertex vertexPool[vertexNumber]; // Store the materials of vertexes
     Vertex *vertexPtrs[vertexNumber]; // Store the pointers of vertexes for rasterizer
-    size_t crtVertexPoolIndex; // Index of vertex pointer to be filled for striped drawing
+    
+    size_t crtVertexPoolIndex; // Index of vertex pointer to be filled for striping drawing
+    
+    // Masks for TriangleFan drawing, striping draw should use these masks rather than the original arrays
+    Vertex *vertexPoolMask = vertexPool;
+    Vertex **vertexPtrsMask = vertexPtrs;
     
     // Setup
     vertexBufferIter = vertexBuffer.begin();
     if (isStrip) {
-        fatalError("unimplemented");
-        vertexBufferIter = vertexBuffer.begin();
-        for (size_t i = 1; i < vertexNumber; ++i) {
-            vertexShader(*(vertexBufferIter++), vertexPool[i]);
-            vertexPtrs[i] = &vertexPool[i];
+        // Set up the begining vertex pool for striping drawing
+        if (isFan) {
+            fatalError("unimplemented");
         }
+        fatalError("unimplemented");
         // At the beginging, the poll are fully materialized except the first slot
+        for (size_t i = 1; i < vertexNumber; ++i) {
+            makeVertex(vertexBufferIter, vertexPoolMask[i]);
+            vertexPtrsMask[i] = &vertexPoolMask[i];
+        }
         crtVertexPoolIndex = 0;
 
     } else {
@@ -118,17 +131,18 @@ void Pipeline<Attribute, Uniform, Varying>::draw(drawType type) {
             fatalError("unimplemented");
             // L-shift the vertex pointers
             for (size_t i = 0; i < vertexNumber - 1; ++i) {
-                vertexPtrs[i] = vertexPtrs[i + 1];
+                vertexPtrsMask[i] = vertexPtrsMask[i + 1];
             }
             
-            // Fill the last pointer
-            vertexShader(*(vertexBufferIter++), vertexPool[crtVertexPoolIndex]);
-            vertexPtrs[vertexNumber - 1] = vertexPool + crtVertexPoolIndex;
+            // Make new vertex and fill the last pointer
+            makeVertex(vertexBufferIter, vertexPoolMask[crtVertexPoolIndex]);
+            vertexPtrsMask[vertexNumber - 1] = vertexPoolMask + crtVertexPoolIndex;
+            
             crtVertexPoolIndex = (crtVertexPoolIndex + 1) % vertexNumber;
         } else {
             // For Point, Line and Triangle, just get new vertexes
             for (size_t i = 0; i < vertexNumber; ++i) {
-                vertexShader(*(vertexBufferIter++), vertexPool[i]);
+                makeVertex(vertexBufferIter, vertexPool[i]);
             }
         }
         

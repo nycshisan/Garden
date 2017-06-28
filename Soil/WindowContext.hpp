@@ -24,6 +24,8 @@
 
 #include "vec.hpp"
 
+typedef unsigned int coord_t;
+
 class WindowContext {
 private:
     GLfloat *pixelsFG = nullptr, *pixelsBG = nullptr;
@@ -130,7 +132,7 @@ public:
         respondCount %= respondInterval;
     }
     
-    void setPixel(size_t x, size_t y, const vec4 &color) {
+    void setPixel(coord_t x, coord_t y, const vec4 &color) {
         assert(x >= 0 && x < width);
         assert(y >= 0 && y < height);
         GLfloat *position = (pixelsFG + (x + width * y) * 4);

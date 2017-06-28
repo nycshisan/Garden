@@ -16,11 +16,11 @@
 #include "Fragment.hpp"
 
 enum drawType {
-    Point,
-    Line,
+    Points,
+    Lines,
     LineStrip,
     LineLoop,
-    Triangle,
+    Triangles,
     TriangleStrip,
     TriangleFan
 };
@@ -34,40 +34,28 @@ class Rasterizer {
     size_t rasterizeLine(Vertex **vertexPtrs);
     size_t rasterizeTriangle(Vertex **VertexPtrs);
     
+    inline coord_t getPixelX(Vertex *v) {
+        return (coord_t)std::round(v->windowX * width);
+    }
+    inline coord_t getPixelY(Vertex *v) {
+        return (coord_t)std::round(v->windowY * height);
+    }
+    
 public:
     Rasterizer(unsigned int width, unsigned int height, Fragment *frags): width(width), height(height), frags(frags) {}
-    
-//    size_t rasterize(Vertex *vertexes) {
-//        size_t count = 0;
-//        size_t min_i = vertexes[0].position.x * width;
-//        size_t max_i = vertexes[2].position.x * width;
-//        size_t min_j = vertexes[0].position.y * height;
-//        size_t max_j = vertexes[2].position.y * height;
-//        
-//        Fragment *crt_frag = frags;
-//        for (size_t i = min_i; i < max_i; ++i) {
-//            for (size_t j = min_j; j < max_j; ++j) {
-//                crt_frag->x = i;
-//                crt_frag->y = j;
-//                ++count; ++crt_frag;
-//            }
-//        }
-//        
-//        return count;
-//    }
     
     inline size_t rasterize(drawType type, Vertex **vertexPtrs);
 };
 
 inline size_t Rasterizer::rasterize(drawType type, Vertex **vertexPtrs) {
     switch (type) {
-        case Point:
+        case Points:
             return rasterizePoint(vertexPtrs);
-        case Line:
+        case Lines:
         case LineStrip:
         case LineLoop:
             return rasterizeLine(vertexPtrs);
-        case Triangle:
+        case Triangles:
         case TriangleStrip:
         case TriangleFan:
             return rasterizeTriangle(vertexPtrs);
@@ -80,19 +68,18 @@ inline size_t Rasterizer::rasterize(drawType type, Vertex **vertexPtrs) {
 size_t Rasterizer::rasterizePoint(Vertex **vertexPtrs) {
     size_t count = 0;
     Vertex *vertex = vertexPtrs[0];
-    vertex->convertToWindowCoord();
     int pointSize = vertex->pointSize;
     
     // Simple offset to the top left point; need to be improved
     int radius = pointSize / 2;
-    size_t leftX = (size_t)std::round(vertex->windowX * width) - radius;
-    size_t rightX = leftX + pointSize;
-    size_t topY = (size_t)std::round(vertex->windowY * height) - radius;
-    size_t BottomY = topY + pointSize;
+    coord_t leftX = getPixelX(vertex) - radius;
+    coord_t rightX = leftX + pointSize;
+    coord_t topY = getPixelY(vertex) - radius;
+    coord_t BottomY = topY + pointSize;
     
     Fragment *crtFrag = frags;
-    for (size_t i = leftX; i < rightX; ++i) {
-        for (size_t j = topY; j < BottomY; ++j) {
+    for (coord_t i = leftX; i < rightX; ++i) {
+        for (coord_t j = topY; j < BottomY; ++j) {
             crtFrag->pixelX = i;
             crtFrag->pixelY = j;
             ++count; ++crtFrag;
@@ -102,7 +89,20 @@ size_t Rasterizer::rasterizePoint(Vertex **vertexPtrs) {
 }
 
 size_t Rasterizer::rasterizeLine(Vertex **vertexPtrs) {
-    return 0;
+    Vertex *leftVertex = vertexPtrs[0], *rightVertex = vertexPtrs[1];
+    
+    // Ensure the left vertex has the smaller x-coordinate
+    coord_t leftPixelX = getPixelX(leftVertex), rightPixelX = getPixelY(rightVertex);
+    if (leftPixelX > rightPixelX) {
+        std::swap(leftVertex, rightVertex);
+        std::swap(leftPixelX, rightPixelX);
+    }
+    
+    coord_t leftPixelY = getPixelY(leftVertex), rightPixelY = getPixelY(rightVertex);
+    
+    
+    size_t count = 0;
+    return count;
 }
 
 size_t Rasterizer::rasterizeTriangle(Vertex **VertexPtrs) {

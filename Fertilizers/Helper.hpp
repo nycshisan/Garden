@@ -6,8 +6,8 @@
 //  Copyright © 2017年 陈十三. All rights reserved.
 //
 
-#ifndef Macro_h
-#define Macro_h
+#ifndef Helper_h
+#define Helper_h
 
 // C++ standards restrain the unwinding of macro arguments used with `##`
 #define CONCAT_LITERAL(L, R) L##R
@@ -18,4 +18,4 @@
     assert(0);\
 } while(0)
 
-#endif /* Macro_h */
+#endif /* Helper_h */

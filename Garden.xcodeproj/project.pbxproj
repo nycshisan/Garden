@@ -37,7 +37,9 @@
 		A53E831A1EB2E91C002BA1D5 /* Pipeline.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Pipeline.hpp; path = Soil/Pipeline.hpp; sourceTree = SOURCE_ROOT; };
 		A5C25FCC1EB1FEE7002738A1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		A5C25FCE1EB1FEFF002738A1 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../usr/local/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
-		A5F1CCDC1EFFD13700180000 /* Helper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Helper.hpp; path = Fertilizer/Helper.hpp; sourceTree = "<group>"; };
+		A5F1CCDD1F0296EA00180000 /* Helper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Helper.hpp; path = Fertilizers/Helper.hpp; sourceTree = "<group>"; };
+		A5F1CCDE1F029F5700180000 /* HelloPoints.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HelloPoints.hpp; path = Seeds/HelloPoints.hpp; sourceTree = "<group>"; };
+		A5F1CCE01F02B83B00180000 /* HelloLines.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HelloLines.hpp; path = Seeds/HelloLines.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,8 @@
 		A53E830B1EB201FE002BA1D5 /* Seeds */ = {
 			isa = PBXGroup;
 			children = (
+				A5F1CCDE1F029F5700180000 /* HelloPoints.hpp */,
+				A5F1CCE01F02B83B00180000 /* HelloLines.hpp */,
 			);
 			name = Seeds;
 			sourceTree = "<group>";
@@ -124,7 +128,7 @@
 		A5F1CCDA1EFFD0F200180000 /* Fertilizers */ = {
 			isa = PBXGroup;
 			children = (
-				A5F1CCDC1EFFD13700180000 /* Helper.hpp */,
+				A5F1CCDD1F0296EA00180000 /* Helper.hpp */,
 			);
 			name = Fertilizers;
 			sourceTree = "<group>";
