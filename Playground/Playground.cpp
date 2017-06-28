@@ -8,55 +8,21 @@
 
 #include "Pipeline.hpp"
 
-#include <memory>
-
-class Attribute_HR {
-public:
-    vec4 pos;
-};
-
-class Uniform_HR {
-    
-};
-
-void fs(const Fragment &f, const Uniform_HR &u, vec4 &color) {
-    color = {1.0, 1.0, 1.0, 1.0};
-}
-
-void vs(const Attribute_HR &a, Vertex &v) {
-    v.position = a.pos;
-}
+//#include "HelloPoints.hpp"
+//#include "HelloLines.hpp"
+#include "LineStripAndLineLoop.hpp"
 
 int main(int argc, const char *argv[]) {
-    auto wc = new WindowContext(640, 480, "Garden");
+    auto wc = new WindowContext(600, 600, "Garden");
     wc->setFPSBoundary(60.0);
-    Pipeline<Attribute_HR, Uniform_HR> p(wc);
-    p.fragmentShader = fs;
-    p.vertexShader = vs;
+    Pipeline<Attribute, Uniform, Varying> pipeline(wc);
+    pipeline.vertexShader = vertexShader;
+    pipeline.fragmentShader = fragmentShader;
     
-    Attribute_HR attr1;
-    attr1.pos = {-1.0, 1.0, 0.0, 1.0};
-    p.vertex_buf.push_back(attr1);
-    
-    Attribute_HR attr2;
-    attr2.pos = {-1.0, -1.0, 0.0, 1.0};
-    p.vertex_buf.push_back(attr2);
-    
-    Attribute_HR attr3;
-    attr3.pos = {1.0, -1.0, 0.0, 1.0};
-    p.vertex_buf.push_back(attr3);
-    
-    Attribute_HR attr4;
-    attr4.pos = {1.0, 1.0, 0.0, 1.0};
-    p.vertex_buf.push_back(attr4);
+    prepare(pipeline);
     
     while (!wc->windowWillClose()) {
-//        for (size_t i = 0; i < 4; ++i) {
-//            for (size_t j = 0; j < 2; ++j) {
-//                p.vertex_buf[i].pos[j] *= 0.995;
-//            }
-//        }
-        p.draw_rectangle();
+        draw(pipeline);
         wc->presentScene();
     }
     

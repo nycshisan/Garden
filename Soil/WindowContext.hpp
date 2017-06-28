@@ -24,19 +24,21 @@
 
 #include "vec.hpp"
 
+typedef unsigned int coord_t;
+
 class WindowContext {
 private:
-    GLfloat *pixels_fg = nullptr, *pixels_bg = nullptr;
+    GLfloat *pixelsFG = nullptr, *pixelsBG = nullptr;
     
     double lastFrameTime = 0.0;
     double fpsBoundary = 0.0;
     double targetInterval;
     
-    char title_buf[128];
+    char titleBuffer[128];
     
     GLFWwindow* window = nullptr;
     
-    const char* vertex_shader_text =
+    const char* vertexShaderText =
     "attribute vec2 a_Position;\n"
     "attribute vec2 a_TexCoord;\n"
     "varying vec2 v_TexCoord;\n"
@@ -46,7 +48,7 @@ private:
     "    v_TexCoord = a_TexCoord;\n"
     "}\n";
     
-    const char* fragment_shader_text =
+    const char* fragmentShaderText =
     "varying vec2 v_TexCoord;\n"
     "uniform sampler2D u_Sampler;\n"
     "void main()\n"
@@ -67,7 +69,7 @@ private:
         2, 3, 0
     };
     
-    static void error_callback(int error, const char* description) {
+    static void errorCallback(int error, const char* description) {
         fprintf(stderr, "Error: %s\n", description);
     }
     
@@ -92,8 +94,8 @@ private:
     void updateFPS() {
         double interval = glfwGetTime() - lastFrameTime;
         double fps = 1 / interval;
-        sprintf(title_buf, "%s - FPS: %.1f", title, fps);
-        glfwSetWindowTitle(window, title_buf);
+        sprintf(titleBuffer, "%s - FPS: %.1f", title, fps);
+        glfwSetWindowTitle(window, titleBuffer);
     }
     
     
@@ -103,8 +105,8 @@ public:
     
     WindowContext(int width, int height, const char *title): width(width), height(height), title(title) {
         initWindow();
-        clearPixel(pixels_fg);
-        clearPixel(pixels_bg);
+        clearPixel(pixelsFG);
+        clearPixel(pixelsBG);
         lastFrameTime = glfwGetTime();
     }
     
@@ -115,11 +117,11 @@ public:
     void presentScene() {
         static int respondCount = 0, respondInterval = 3;
         
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, pixels_fg);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, pixelsFG);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glfwSwapBuffers(window);
-        std::swap(pixels_fg, pixels_bg);
-        clearPixel(pixels_bg);
+        std::swap(pixelsFG, pixelsBG);
+        clearPixel(pixelsBG);
         updateFPS();
         boundFPS();
         
@@ -130,10 +132,10 @@ public:
         respondCount %= respondInterval;
     }
     
-    void setPixel(size_t x, size_t y, const vec4 &color) {
+    void setPixel(coord_t x, coord_t y, const vec4 &color) {
         assert(x >= 0 && x < width);
         assert(y >= 0 && y < height);
-        GLfloat *position = (pixels_fg + (x + width * y) * 4);
+        GLfloat *position = (pixelsFG + (x + width * y) * 4);
         
         _mm_stream_ps(position, _mm_load_ps(color.d));
     }
@@ -145,8 +147,8 @@ public:
     }
     
     ~WindowContext() {
-        delete[] pixels_fg;
-        delete[] pixels_bg;
+        delete[] pixelsFG;
+        delete[] pixelsBG;
         glfwDestroyWindow(window);
         glfwTerminate();
     }
@@ -154,7 +156,7 @@ public:
 
 bool WindowContext::initWindow() {
     // Initialize GLFW
-    glfwSetErrorCallback(error_callback);
+    glfwSetErrorCallback(errorCallback);
     
     if (!glfwInit()) {
         return false;
@@ -179,42 +181,42 @@ bool WindowContext::initWindow() {
     
     
     // OpenGL configuration
-    GLuint vertex_buffer;
-    glGenBuffers(1, &vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    GLuint vertexBuffer;
+    glGenBuffers(1, &vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     
-    GLuint element_buffer;
-    glGenBuffers(1, &element_buffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
+    GLuint elementBuffer;
+    glGenBuffers(1, &elementBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
     
-    GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
-    glCompileShader(vertex_shader);
+    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &vertexShaderText, NULL);
+    glCompileShader(vertexShader);
     
-    GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
-    glCompileShader(fragment_shader);
+    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShader, 1, &fragmentShaderText, NULL);
+    glCompileShader(fragmentShader);
     
     GLuint program = glCreateProgram();
-    glAttachShader(program, vertex_shader);
-    glAttachShader(program, fragment_shader);
+    glAttachShader(program, vertexShader);
+    glAttachShader(program, fragmentShader);
     glLinkProgram(program);
     glUseProgram(program);
     
-    GLint a_Position_loc = glGetAttribLocation(program, "a_Position");
-    GLint a_TexCoord_loc = glGetAttribLocation(program, "a_TexCoord");
-    GLint u_Sampler_loc = glGetUniformLocation(program, "u_Sampler");
-    glEnableVertexAttribArray(a_Position_loc);
-    glVertexAttribPointer(a_Position_loc, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4, (void*) 0);
-    glEnableVertexAttribArray(a_TexCoord_loc);
-    glVertexAttribPointer(a_TexCoord_loc, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4, (void*) (sizeof(GLfloat) * 2));
-    glUniform1i(u_Sampler_loc, 0);
+    GLint aPositionLoc = glGetAttribLocation(program, "a_Position");
+    GLint aTexCoordLoc = glGetAttribLocation(program, "a_TexCoord");
+    GLint uSamplerLoc = glGetUniformLocation(program, "u_Sampler");
+    glEnableVertexAttribArray(aPositionLoc);
+    glVertexAttribPointer(aPositionLoc, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4, (void*) 0);
+    glEnableVertexAttribArray(aTexCoordLoc);
+    glVertexAttribPointer(aTexCoordLoc, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4, (void*) (sizeof(GLfloat) * 2));
+    glUniform1i(uSamplerLoc, 0);
     
-    GLuint texture_id;
-    glGenTextures(1, &texture_id);
-    glBindTexture(GL_TEXTURE_2D, texture_id);
+    GLuint textureId;
+    glGenTextures(1, &textureId);
+    glBindTexture(GL_TEXTURE_2D, textureId);
     
     
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -223,8 +225,8 @@ bool WindowContext::initWindow() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
     // Initialize pixels
-    pixels_fg = new GLfloat[width * height * 4];
-    pixels_bg = new GLfloat[width * height * 4];
+    pixelsFG = new GLfloat[width * height * 4];
+    pixelsBG = new GLfloat[width * height * 4];
     
     return true;
 }

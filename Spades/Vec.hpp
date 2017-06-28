@@ -6,8 +6,8 @@
 //  Copyright © 2017年 陈十三. All rights reserved.
 //
 
-#ifndef vec_h
-#define vec_h
+#ifndef Vec_h
+#define Vec_h
 
 #include <cassert>
 
@@ -38,4 +38,4 @@ DEF_VEC(3);
 DEF_VEC(2);
 
 
-#endif /* vec_h */
+#endif /* Vec_h */

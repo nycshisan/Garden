@@ -9,12 +9,12 @@
 #ifndef Fragment_h
 #define Fragment_h
 
-#include "vec.hpp"
+#include "Vec.hpp"
 
 class Fragment {
 public:
-    vec4 position;
-    size_t x, y;
+    coord_t pixelX, pixelY;
+    data_t fragZ;
 };
 
 #endif /* Fragment_h */
