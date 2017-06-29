@@ -35,6 +35,7 @@
 		A53E83131EB20221002BA1D5 /* Playground.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Playground.cpp; sourceTree = "<group>"; };
 		A53E83181EB202B4002BA1D5 /* WindowContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = WindowContext.hpp; path = Soil/WindowContext.hpp; sourceTree = SOURCE_ROOT; };
 		A53E831A1EB2E91C002BA1D5 /* Pipeline.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Pipeline.hpp; path = Soil/Pipeline.hpp; sourceTree = SOURCE_ROOT; };
+		A576D5F41F05130300457E31 /* Varying.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Varying.hpp; path = Spades/Varying.hpp; sourceTree = "<group>"; };
 		A5C25FCC1EB1FEE7002738A1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		A5C25FCE1EB1FEFF002738A1 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../usr/local/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
 		A5F1CCDD1F0296EA00180000 /* Helper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Helper.hpp; path = Fertilizers/Helper.hpp; sourceTree = "<group>"; };
@@ -64,6 +65,7 @@
 				A5323F591EB9AE6800532E6F /* Rasterizer.hpp */,
 				A5323F5A1EB9AE9400532E6F /* Vertex.hpp */,
 				A5323F5B1EB9AEA600532E6F /* Fragment.hpp */,
+				A576D5F41F05130300457E31 /* Varying.hpp */,
 				A5323F5D1EB9B22600532E6F /* Vec.hpp */,
 			);
 			name = Spades;

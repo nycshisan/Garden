@@ -16,13 +16,11 @@ public:
 
 class Uniform {};
 
-class Varying {};
-
-VS {
+VERTEX_SHADER {
     v.position = a.pos;
 }
 
-FS {
+FRAGMENT_SHADER {
     color = {1.0, 1.0, 1.0, 1.0};
 }
 

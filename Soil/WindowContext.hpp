@@ -24,6 +24,7 @@
 
 #include "vec.hpp"
 
+
 typedef unsigned int coord_t;
 
 class WindowContext {

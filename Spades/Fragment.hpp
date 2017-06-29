@@ -9,6 +9,7 @@
 #ifndef Fragment_h
 #define Fragment_h
 
+#include "Varying.hpp"
 #include "Vec.hpp"
 
 class Fragment {

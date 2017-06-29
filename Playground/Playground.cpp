@@ -15,7 +15,7 @@
 int main(int argc, const char *argv[]) {
     auto wc = new WindowContext(600, 600, "Garden");
     wc->setFPSBoundary(60.0);
-    Pipeline<Attribute, Uniform, Varying> pipeline(wc);
+    Pipeline<Attribute, Uniform> pipeline(wc);
     pipeline.vertexShader = vertexShader;
     pipeline.fragmentShader = fragmentShader;
     
