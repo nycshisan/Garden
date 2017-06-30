@@ -1,5 +1,5 @@
 //
-//  HelloLine.hpp
+//  HelloLines.hpp
 //  Garden
 //
 //  Created by Nycshisan on 2017/6/27.
@@ -15,6 +15,8 @@ public:
 };
 
 class Uniform {};
+
+#define Varying NullVarying
 
 VERTEX_SHADER {
     v.position = a.pos;

@@ -1,5 +1,5 @@
 //
-//  vec.hpp
+//  Vec.hpp
 //  Garden
 //
 //  Created by Nycshisan on 2017/5/3.
@@ -10,8 +10,9 @@
 #define Vec_h
 
 #include <cassert>
+#include <x86intrin.h>
 
-typedef float data_t;
+#include "Misc.hpp"
 
 #define VEC4_NAME x, y, z, w
 #define VEC3_NAME x, y, z

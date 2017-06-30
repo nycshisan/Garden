@@ -9,10 +9,17 @@
 #ifndef Vertex_h
 #define Vertex_h
 
-#include "Varying.hpp"
 #include "Vec.hpp"
 
+template <class Varying>
 class Vertex {
+    template <class Attribute, class Uniform, class _Varying>
+    friend class Pipeline;
+    
+    void convertToWindowCoord() {
+        windowX = (position.x / position.w + 1.0) / 2;
+        windowY = -(position.y / position.w - 1.0) / 2;
+    }
     
 public:
     vec4 position;
@@ -20,10 +27,7 @@ public:
     
     data_t windowX, windowY;
     
-    void convertToWindowCoord() {
-        windowX = (position.x / position.w + 1.0) / 2;
-        windowY = -(position.y / position.w - 1.0) / 2;
-    }
+    Varying varying;
 };
 
 #endif /* Vertex_h */

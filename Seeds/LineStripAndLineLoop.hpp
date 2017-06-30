@@ -16,6 +16,8 @@ public:
 
 class Uniform {};
 
+#define Varying NullVarying
+
 VERTEX_SHADER {
     v.position = a.pos;
 }
@@ -27,7 +29,7 @@ FRAGMENT_SHADER {
 PREPARE {
     Attribute attr;
     
-    data_t base = 0.1;
+    data_t base = -0.3;
     attr.pos = {0.5, base, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
     attr.pos = {-0.5, base, 0.0, 1.0};

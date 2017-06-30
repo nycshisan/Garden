@@ -13,7 +13,9 @@
 #include <memory>
 #include <cmath>
 
+#include "Vertex.hpp"
 #include "Fragment.hpp"
+#include "Misc.hpp"
 
 enum DrawType {
     Points,
@@ -25,29 +27,31 @@ enum DrawType {
     TriangleFan
 };
 
+template <class Varying>
 class Rasterizer {
     unsigned int width, height;
     
-    Fragment *frags;
+    Fragment<Varying> *frags;
     
-    size_t rasterizePoint(Vertex **vertexPtrs);
-    size_t rasterizeLine(Vertex **vertexPtrs);
-    size_t rasterizeTriangle(Vertex **VertexPtrs);
+    size_t rasterizePoint(Vertex<Varying> **vertexPtrs);
+    size_t rasterizeLine(Vertex<Varying> **vertexPtrs);
+    size_t rasterizeTriangle(Vertex<Varying> **VertexPtrs);
     
-    inline coord_t getPixelX(Vertex *v) {
+    inline coord_t getPixelX(Vertex<Varying> *v) {
         return (coord_t)std::round(v->windowX * width);
     }
-    inline coord_t getPixelY(Vertex *v) {
+    inline coord_t getPixelY(Vertex<Varying> *v) {
         return (coord_t)std::round(v->windowY * height);
     }
     
 public:
-    Rasterizer(unsigned int width, unsigned int height, Fragment *frags): width(width), height(height), frags(frags) {}
+    Rasterizer(unsigned int width, unsigned int height, Fragment<Varying> *frags): width(width), height(height), frags(frags) {}
     
-    inline size_t rasterize(DrawType type, Vertex **vertexPtrs);
+    inline size_t rasterize(DrawType type, Vertex<Varying> **vertexPtrs);
 };
 
-inline size_t Rasterizer::rasterize(DrawType type, Vertex **vertexPtrs) {
+template <class Varying>
+inline size_t Rasterizer<Varying>::rasterize(DrawType type, Vertex<Varying> **vertexPtrs) {
     switch (type) {
         case Points:
             return rasterizePoint(vertexPtrs);
@@ -65,10 +69,12 @@ inline size_t Rasterizer::rasterize(DrawType type, Vertex **vertexPtrs) {
     }
 }
 
-size_t Rasterizer::rasterizePoint(Vertex **vertexPtrs) {
+template <class Varying>
+size_t Rasterizer<Varying>::rasterizePoint(Vertex<Varying> **vertexPtrs) {
     size_t count = 0;
-    Vertex *vertex = vertexPtrs[0];
+    Vertex<Varying> *vertex = vertexPtrs[0];
     int pointSize = vertex->pointSize;
+    data_t z = vertex->position.z;
     
     // Simple offset to the top left point; need to be improved
     int radius = pointSize / 2;
@@ -77,30 +83,37 @@ size_t Rasterizer::rasterizePoint(Vertex **vertexPtrs) {
     coord_t topY = getPixelY(vertex) - radius;
     coord_t BottomY = topY + pointSize;
     
-    Fragment *crtFrag = frags;
+    Fragment<Varying> *crtFrag = frags;
     for (coord_t i = leftX; i < rightX; ++i) {
         for (coord_t j = topY; j < BottomY; ++j) {
             crtFrag->pixelX = i;
             crtFrag->pixelY = j;
+            crtFrag->fragZ = z;
+            crtFrag->varying = vertex->varying;
+            
             ++count; ++crtFrag;
         }
     }
     return count;
 }
 
-size_t Rasterizer::rasterizeLine(Vertex **vertexPtrs) {
+template <class Varying>
+size_t Rasterizer<Varying>::rasterizeLine(Vertex<Varying> **vertexPtrs) {
     // Setup
-    coord_t pixelXA = getPixelX(vertexPtrs[0]), pixelXB = getPixelX(vertexPtrs[1]), pixelYA = getPixelY(vertexPtrs[0]), pixelYB = getPixelY(vertexPtrs[1]);
+    Vertex<Varying> *&vertexA = vertexPtrs[0], *&vertexB = vertexPtrs[1];
+    coord_t pixelXA = getPixelX(vertexA), pixelXB = getPixelX(vertexB), pixelYA = getPixelY(vertexA), pixelYB = getPixelY(vertexB);
     int dx = pixelXB - pixelXA, dy = pixelYB - pixelYA;
     int stepX = dx > 0 ? 1 : -1, stepY = dy > 0 ? 1 : -1;
-    dx = abs(dx); dy = abs(dy);
+    dx = abs(dx); dy = abs(dy); // For error calculating
     
     int error = 0;
     
     coord_t crtX = pixelXA, crtY = pixelYA;
+    data_t crtZ = vertexA->position.z;
+    Varying crtVarying = vertexA->varying;
     
     coord_t *indepCoordPtr, *depCoordPtr, stepEnd;
-    int errorStep, errorThreshold, *indepStepPtr, *depStepPtr;
+    int errorStep, errorThreshold, *indepStepPtr, *depStepPtr, stepLength;
     
     if (dx > dy) {
         // |k| < 1, step by x
@@ -111,6 +124,7 @@ size_t Rasterizer::rasterizeLine(Vertex **vertexPtrs) {
         stepEnd = pixelXB + stepX;
         errorStep = 2 * dy;
         errorThreshold = 2 * dx;
+        stepLength = dx;
     } else {
         // |k| >= 1, step by y
         indepCoordPtr = &crtY;
@@ -120,15 +134,21 @@ size_t Rasterizer::rasterizeLine(Vertex **vertexPtrs) {
         stepEnd = pixelYB + stepY;
         errorStep = 2 * dx;
         errorThreshold = 2 * dy;
+        stepLength = dy;
     }
     
+    data_t stepZ = (vertexB->position.z - vertexA->position.z) / stepLength;
+    Varying stepVarying = vertexA->varying; stepVarying.subtract(vertexB->varying); stepVarying.multiply(1 / stepLength);
+    
     size_t count = 0;
-    Fragment *crtFrag = frags;
+    Fragment<Varying> *crtFrag = frags;
     
     // Bresenham algorithm
     do {
         crtFrag->pixelX = crtX;
         crtFrag->pixelY = crtY;
+        crtFrag->fragZ = crtZ;
+        crtFrag->varying = crtVarying;
         
         ++crtFrag; ++count;
         
@@ -138,12 +158,16 @@ size_t Rasterizer::rasterizeLine(Vertex **vertexPtrs) {
             *depCoordPtr += *depStepPtr;
             error -= errorThreshold;
         }
+        
+        crtZ += stepZ;
+        crtVarying.add(stepVarying);
     } while (*indepCoordPtr != stepEnd);
     
     return count;
 }
 
-size_t Rasterizer::rasterizeTriangle(Vertex **VertexPtrs) {
+template <class Varying>
+size_t Rasterizer<Varying>::rasterizeTriangle(Vertex<Varying> **VertexPtrs) {
     fatalError("Unimplemented");
 }
 

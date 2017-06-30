@@ -16,9 +16,11 @@ public:
 
 class Uniform {};
 
+#define Varying NullVarying
+
 VERTEX_SHADER {
     v.position = a.pos;
-    v.pointSize = 100;
+    v.pointSize = 250;
 }
 
 FRAGMENT_SHADER {
