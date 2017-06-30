@@ -138,7 +138,7 @@ public:
         assert(y >= 0 && y < height);
         GLfloat *position = (pixelsFG + (x + width * y) * 4);
         
-        _mm_stream_ps(position, _mm_load_ps(color.d));
+        _mm_stream_ps(position, color.m128);
     }
     
     void setFPSBoundary(double fps) {

@@ -31,7 +31,7 @@
 		A5323F5B1EB9AEA600532E6F /* Fragment.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Fragment.hpp; path = Spades/Fragment.hpp; sourceTree = "<group>"; };
 		A5323F5D1EB9B22600532E6F /* Vec.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Vec.hpp; path = Spades/Vec.hpp; sourceTree = "<group>"; };
 		A53E83051EB1FF37002BA1D5 /* libGLEW.2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.0.0.dylib; path = ../../../../../../usr/local/lib/libGLEW.2.0.0.dylib; sourceTree = "<group>"; };
-		A53E83111EB20221002BA1D5 /* Playground */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Playground; sourceTree = BUILT_PRODUCTS_DIR; };
+		A53E83111EB20221002BA1D5 /* Garden */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Garden; sourceTree = BUILT_PRODUCTS_DIR; };
 		A53E83181EB202B4002BA1D5 /* WindowContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = WindowContext.hpp; path = Soil/WindowContext.hpp; sourceTree = SOURCE_ROOT; };
 		A53E831A1EB2E91C002BA1D5 /* Pipeline.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Pipeline.hpp; path = Soil/Pipeline.hpp; sourceTree = SOURCE_ROOT; };
 		A576D5F51F05244D00457E31 /* ColoredLine.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ColoredLine.hpp; path = Seeds/ColoredLine.hpp; sourceTree = "<group>"; };
@@ -91,7 +91,7 @@
 				A576D5F71F06067000457E31 /* Garden.cpp */,
 			);
 			name = Garden;
-			path = Playground;
+			path = Garden;
 			sourceTree = "<group>";
 		};
 		A5C25FB81EB1FED7002738A1 = {
@@ -109,7 +109,7 @@
 		A5C25FC21EB1FED7002738A1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A53E83111EB20221002BA1D5 /* Playground */,
+				A53E83111EB20221002BA1D5 /* Garden */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -145,9 +145,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A53E83101EB20221002BA1D5 /* Playground */ = {
+		A53E83101EB20221002BA1D5 /* Garden */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A53E83151EB20221002BA1D5 /* Build configuration list for PBXNativeTarget "Playground" */;
+			buildConfigurationList = A53E83151EB20221002BA1D5 /* Build configuration list for PBXNativeTarget "Garden" */;
 			buildPhases = (
 				A53E830D1EB20221002BA1D5 /* Sources */,
 				A53E830E1EB20221002BA1D5 /* Frameworks */,
@@ -157,9 +157,9 @@
 			);
 			dependencies = (
 			);
-			name = Playground;
-			productName = Playground;
-			productReference = A53E83111EB20221002BA1D5 /* Playground */;
+			name = Garden;
+			productName = Garden;
+			productReference = A53E83111EB20221002BA1D5 /* Garden */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -189,7 +189,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A53E83101EB20221002BA1D5 /* Playground */,
+				A53E83101EB20221002BA1D5 /* Garden */,
 			);
 		};
 /* End PBXProject section */
@@ -328,7 +328,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A53E83151EB20221002BA1D5 /* Build configuration list for PBXNativeTarget "Playground" */ = {
+		A53E83151EB20221002BA1D5 /* Build configuration list for PBXNativeTarget "Garden" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A53E83161EB20221002BA1D5 /* Debug */,
