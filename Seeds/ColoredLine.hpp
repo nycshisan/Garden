@@ -18,7 +18,7 @@ public:
 class Uniform {};
 
 class Varying {
-    VARYING_DEF_HELPER(Varying, {}, {}, {})
+    VARYING_DEF_HELPER(Varying, { color += addend.color; }, { color -= subtrahend.color; }, { color *= factor; })
     
 public:
     vec4 color;
@@ -26,10 +26,11 @@ public:
 
 VERTEX_SHADER {
     v.position = a.pos;
+    v.varying.color = a.color;
 }
 
 FRAGMENT_SHADER {
-    color = {1.0, 1.0, 1.0, 1.0};
+    color = f.varying.color;
 }
 
 PREPARE {

@@ -138,7 +138,9 @@ size_t Rasterizer<Varying>::rasterizeLine(Vertex<Varying> **vertexPtrs) {
     }
     
     data_t stepZ = (vertexB->position.z - vertexA->position.z) / stepLength;
-    Varying stepVarying = vertexA->varying; stepVarying.subtract(vertexB->varying); stepVarying.multiply(1 / stepLength);
+    Varying stepVarying = vertexB->varying;
+    stepVarying.subtract(vertexA->varying);
+    stepVarying.multiply(1.0 / stepLength);
     
     size_t count = 0;
     Fragment<Varying> *crtFrag = frags;
