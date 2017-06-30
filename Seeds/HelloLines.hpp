@@ -1,5 +1,5 @@
 //
-//  HelloLine.hpp
+//  HelloLines.hpp
 //  Garden
 //
 //  Created by Nycshisan on 2017/6/27.
@@ -16,13 +16,13 @@ public:
 
 class Uniform {};
 
-class Varying {};
+#define Varying NullVarying
 
-VS {
+VERTEX_SHADER {
     v.position = a.pos;
 }
 
-FS {
+FRAGMENT_SHADER {
     color = {1.0, 1.0, 1.0, 1.0};
 }
 

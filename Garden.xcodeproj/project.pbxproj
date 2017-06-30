@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A53E83141EB20221002BA1D5 /* Playground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A53E83131EB20221002BA1D5 /* Playground.cpp */; };
 		A53E831C1EB2EA62002BA1D5 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5C25FCC1EB1FEE7002738A1 /* OpenGL.framework */; };
 		A53E831D1EB2EA75002BA1D5 /* libGLEW.2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A53E83051EB1FF37002BA1D5 /* libGLEW.2.0.0.dylib */; };
 		A53E831E1EB2EA88002BA1D5 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A5C25FCE1EB1FEFF002738A1 /* libglfw.3.3.dylib */; };
+		A576D5F81F06067000457E31 /* Garden.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A576D5F71F06067000457E31 /* Garden.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,13 +31,15 @@
 		A5323F5B1EB9AEA600532E6F /* Fragment.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Fragment.hpp; path = Spades/Fragment.hpp; sourceTree = "<group>"; };
 		A5323F5D1EB9B22600532E6F /* Vec.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Vec.hpp; path = Spades/Vec.hpp; sourceTree = "<group>"; };
 		A53E83051EB1FF37002BA1D5 /* libGLEW.2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.0.0.dylib; path = ../../../../../../usr/local/lib/libGLEW.2.0.0.dylib; sourceTree = "<group>"; };
-		A53E83111EB20221002BA1D5 /* Playground */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Playground; sourceTree = BUILT_PRODUCTS_DIR; };
-		A53E83131EB20221002BA1D5 /* Playground.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Playground.cpp; sourceTree = "<group>"; };
+		A53E83111EB20221002BA1D5 /* Garden */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Garden; sourceTree = BUILT_PRODUCTS_DIR; };
 		A53E83181EB202B4002BA1D5 /* WindowContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = WindowContext.hpp; path = Soil/WindowContext.hpp; sourceTree = SOURCE_ROOT; };
 		A53E831A1EB2E91C002BA1D5 /* Pipeline.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Pipeline.hpp; path = Soil/Pipeline.hpp; sourceTree = SOURCE_ROOT; };
+		A576D5F51F05244D00457E31 /* ColoredLine.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ColoredLine.hpp; path = Seeds/ColoredLine.hpp; sourceTree = "<group>"; };
+		A576D5F61F05258300457E31 /* Misc.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Misc.hpp; path = Spades/Misc.hpp; sourceTree = "<group>"; };
+		A576D5F71F06067000457E31 /* Garden.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Garden.cpp; path = Garden/Garden.cpp; sourceTree = SOURCE_ROOT; };
 		A5C25FCC1EB1FEE7002738A1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		A5C25FCE1EB1FEFF002738A1 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../usr/local/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
-		A5F1CCDD1F0296EA00180000 /* Helper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Helper.hpp; path = Fertilizers/Helper.hpp; sourceTree = "<group>"; };
+		A5F1CCDD1F0296EA00180000 /* SeedsHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SeedsHelper.hpp; path = Fertilizers/SeedsHelper.hpp; sourceTree = "<group>"; };
 		A5F1CCDE1F029F5700180000 /* HelloPoints.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HelloPoints.hpp; path = Seeds/HelloPoints.hpp; sourceTree = "<group>"; };
 		A5F1CCE01F02B83B00180000 /* HelloLines.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HelloLines.hpp; path = Seeds/HelloLines.hpp; sourceTree = "<group>"; };
 		A5F1CCE11F03AC0400180000 /* LineStripAndLineLoop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = LineStripAndLineLoop.hpp; path = Seeds/LineStripAndLineLoop.hpp; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 				A5323F5A1EB9AE9400532E6F /* Vertex.hpp */,
 				A5323F5B1EB9AEA600532E6F /* Fragment.hpp */,
 				A5323F5D1EB9B22600532E6F /* Vec.hpp */,
+				A576D5F61F05258300457E31 /* Misc.hpp */,
 			);
 			name = Spades;
 			sourceTree = "<group>";
@@ -72,20 +75,23 @@
 		A53E830B1EB201FE002BA1D5 /* Seeds */ = {
 			isa = PBXGroup;
 			children = (
+				A5F1CCDA1EFFD0F200180000 /* Fertilizers */,
 				A5F1CCDE1F029F5700180000 /* HelloPoints.hpp */,
 				A5F1CCE01F02B83B00180000 /* HelloLines.hpp */,
 				A5F1CCE11F03AC0400180000 /* LineStripAndLineLoop.hpp */,
 				A5F1CCE21F03B67F00180000 /* ClippingAndZTest.hpp */,
+				A576D5F51F05244D00457E31 /* ColoredLine.hpp */,
 			);
 			name = Seeds;
 			sourceTree = "<group>";
 		};
-		A53E83121EB20221002BA1D5 /* Playground */ = {
+		A53E83121EB20221002BA1D5 /* Garden */ = {
 			isa = PBXGroup;
 			children = (
-				A53E83131EB20221002BA1D5 /* Playground.cpp */,
+				A576D5F71F06067000457E31 /* Garden.cpp */,
 			);
-			path = Playground;
+			name = Garden;
+			path = Garden;
 			sourceTree = "<group>";
 		};
 		A5C25FB81EB1FED7002738A1 = {
@@ -94,8 +100,7 @@
 				A5C25FC31EB1FED7002738A1 /* Soil */,
 				A53E830A1EB201F1002BA1D5 /* Spades */,
 				A53E830B1EB201FE002BA1D5 /* Seeds */,
-				A5F1CCDA1EFFD0F200180000 /* Fertilizers */,
-				A53E83121EB20221002BA1D5 /* Playground */,
+				A53E83121EB20221002BA1D5 /* Garden */,
 				A5C25FC21EB1FED7002738A1 /* Products */,
 				A5C25FCB1EB1FEE7002738A1 /* Frameworks */,
 			);
@@ -104,7 +109,7 @@
 		A5C25FC21EB1FED7002738A1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A53E83111EB20221002BA1D5 /* Playground */,
+				A53E83111EB20221002BA1D5 /* Garden */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -132,7 +137,7 @@
 		A5F1CCDA1EFFD0F200180000 /* Fertilizers */ = {
 			isa = PBXGroup;
 			children = (
-				A5F1CCDD1F0296EA00180000 /* Helper.hpp */,
+				A5F1CCDD1F0296EA00180000 /* SeedsHelper.hpp */,
 			);
 			name = Fertilizers;
 			sourceTree = "<group>";
@@ -140,9 +145,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A53E83101EB20221002BA1D5 /* Playground */ = {
+		A53E83101EB20221002BA1D5 /* Garden */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A53E83151EB20221002BA1D5 /* Build configuration list for PBXNativeTarget "Playground" */;
+			buildConfigurationList = A53E83151EB20221002BA1D5 /* Build configuration list for PBXNativeTarget "Garden" */;
 			buildPhases = (
 				A53E830D1EB20221002BA1D5 /* Sources */,
 				A53E830E1EB20221002BA1D5 /* Frameworks */,
@@ -152,9 +157,9 @@
 			);
 			dependencies = (
 			);
-			name = Playground;
-			productName = Playground;
-			productReference = A53E83111EB20221002BA1D5 /* Playground */;
+			name = Garden;
+			productName = Garden;
+			productReference = A53E83111EB20221002BA1D5 /* Garden */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -184,7 +189,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A53E83101EB20221002BA1D5 /* Playground */,
+				A53E83101EB20221002BA1D5 /* Garden */,
 			);
 		};
 /* End PBXProject section */
@@ -194,7 +199,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A53E83141EB20221002BA1D5 /* Playground.cpp in Sources */,
+				A576D5F81F06067000457E31 /* Garden.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,7 +328,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A53E83151EB20221002BA1D5 /* Build configuration list for PBXNativeTarget "Playground" */ = {
+		A53E83151EB20221002BA1D5 /* Build configuration list for PBXNativeTarget "Garden" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A53E83161EB20221002BA1D5 /* Debug */,

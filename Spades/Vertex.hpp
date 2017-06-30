@@ -11,18 +11,23 @@
 
 #include "Vec.hpp"
 
+template <class Varying>
 class Vertex {
-    friend class Rasterizer;
-    data_t windowX, windowY;
+    template <class Attribute, class Uniform, class _Varying>
+    friend class Pipeline;
+    
+    void convertToWindowCoord() {
+        windowX = (position.x / position.w + 1.0) / 2;
+        windowY = -(position.y / position.w - 1.0) / 2;
+    }
     
 public:
     vec4 position;
     int pointSize = 1;
     
-    void convertToWindowCoord() {
-        windowX = (position.x + 1.0) / 2;
-        windowY = -(position.y - 1.0) / 2;
-    }
+    data_t windowX, windowY;
+    
+    Varying varying;
 };
 
 #endif /* Vertex_h */
