@@ -10,6 +10,7 @@
 #define Fragment_h
 
 #include "Vec.hpp"
+#include "Mat.hpp"
 
 template <class Varying>
 class Fragment {

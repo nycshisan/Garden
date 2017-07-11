@@ -11,10 +11,20 @@
 		A53E831D1EB2EA75002BA1D5 /* libGLEW.2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A53E83051EB1FF37002BA1D5 /* libGLEW.2.0.0.dylib */; };
 		A53E831E1EB2EA88002BA1D5 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A5C25FCE1EB1FEFF002738A1 /* libglfw.3.3.dylib */; };
 		A576D5F81F06067000457E31 /* Garden.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A576D5F71F06067000457E31 /* Garden.cpp */; };
+		A576D6021F0744F700457E31 /* Lab.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A576D6011F0744F700457E31 /* Lab.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		A53E830F1EB20221002BA1D5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		A576D5FD1F0744F700457E31 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -37,6 +47,10 @@
 		A576D5F51F05244D00457E31 /* ColoredLine.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ColoredLine.hpp; path = Seeds/ColoredLine.hpp; sourceTree = "<group>"; };
 		A576D5F61F05258300457E31 /* Misc.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Misc.hpp; path = Spades/Misc.hpp; sourceTree = "<group>"; };
 		A576D5F71F06067000457E31 /* Garden.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Garden.cpp; path = Garden/Garden.cpp; sourceTree = SOURCE_ROOT; };
+		A576D5F91F06559500457E31 /* HelloTriangles.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HelloTriangles.hpp; path = Seeds/HelloTriangles.hpp; sourceTree = "<group>"; };
+		A576D5FA1F06614400457E31 /* Mat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Mat.hpp; path = Spades/Mat.hpp; sourceTree = "<group>"; };
+		A576D5FF1F0744F700457E31 /* Lab */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Lab; sourceTree = BUILT_PRODUCTS_DIR; };
+		A576D6011F0744F700457E31 /* Lab.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Lab.cpp; sourceTree = "<group>"; };
 		A5C25FCC1EB1FEE7002738A1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		A5C25FCE1EB1FEFF002738A1 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../usr/local/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
 		A5F1CCDD1F0296EA00180000 /* SeedsHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SeedsHelper.hpp; path = Fertilizers/SeedsHelper.hpp; sourceTree = "<group>"; };
@@ -57,6 +71,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A576D5FC1F0744F700457E31 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -67,6 +88,7 @@
 				A5323F5A1EB9AE9400532E6F /* Vertex.hpp */,
 				A5323F5B1EB9AEA600532E6F /* Fragment.hpp */,
 				A5323F5D1EB9B22600532E6F /* Vec.hpp */,
+				A576D5FA1F06614400457E31 /* Mat.hpp */,
 				A576D5F61F05258300457E31 /* Misc.hpp */,
 			);
 			name = Spades;
@@ -81,6 +103,7 @@
 				A5F1CCE11F03AC0400180000 /* LineStripAndLineLoop.hpp */,
 				A5F1CCE21F03B67F00180000 /* ClippingAndZTest.hpp */,
 				A576D5F51F05244D00457E31 /* ColoredLine.hpp */,
+				A576D5F91F06559500457E31 /* HelloTriangles.hpp */,
 			);
 			name = Seeds;
 			sourceTree = "<group>";
@@ -90,8 +113,15 @@
 			children = (
 				A576D5F71F06067000457E31 /* Garden.cpp */,
 			);
-			name = Garden;
 			path = Garden;
+			sourceTree = "<group>";
+		};
+		A576D6001F0744F700457E31 /* Lab */ = {
+			isa = PBXGroup;
+			children = (
+				A576D6011F0744F700457E31 /* Lab.cpp */,
+			);
+			path = Lab;
 			sourceTree = "<group>";
 		};
 		A5C25FB81EB1FED7002738A1 = {
@@ -101,6 +131,7 @@
 				A53E830A1EB201F1002BA1D5 /* Spades */,
 				A53E830B1EB201FE002BA1D5 /* Seeds */,
 				A53E83121EB20221002BA1D5 /* Garden */,
+				A576D6001F0744F700457E31 /* Lab */,
 				A5C25FC21EB1FED7002738A1 /* Products */,
 				A5C25FCB1EB1FEE7002738A1 /* Frameworks */,
 			);
@@ -110,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				A53E83111EB20221002BA1D5 /* Garden */,
+				A576D5FF1F0744F700457E31 /* Lab */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -162,6 +194,23 @@
 			productReference = A53E83111EB20221002BA1D5 /* Garden */;
 			productType = "com.apple.product-type.tool";
 		};
+		A576D5FE1F0744F700457E31 /* Lab */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A576D6031F0744F700457E31 /* Build configuration list for PBXNativeTarget "Lab" */;
+			buildPhases = (
+				A576D5FB1F0744F700457E31 /* Sources */,
+				A576D5FC1F0744F700457E31 /* Frameworks */,
+				A576D5FD1F0744F700457E31 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Lab;
+			productName = Lab;
+			productReference = A576D5FF1F0744F700457E31 /* Lab */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -173,6 +222,10 @@
 				TargetAttributes = {
 					A53E83101EB20221002BA1D5 = {
 						CreatedOnToolsVersion = 8.3.2;
+						ProvisioningStyle = Automatic;
+					};
+					A576D5FE1F0744F700457E31 = {
+						CreatedOnToolsVersion = 8.3.3;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -190,6 +243,7 @@
 			projectRoot = "";
 			targets = (
 				A53E83101EB20221002BA1D5 /* Garden */,
+				A576D5FE1F0744F700457E31 /* Lab */,
 			);
 		};
 /* End PBXProject section */
@@ -200,6 +254,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				A576D5F81F06067000457E31 /* Garden.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A576D5FB1F0744F700457E31 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A576D6021F0744F700457E31 /* Lab.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,6 +281,20 @@
 			buildSettings = {
 				GCC_OPTIMIZATION_LEVEL = s;
 				LLVM_LTO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		A576D6041F0744F700457E31 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		A576D6051F0744F700457E31 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -260,6 +336,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				GCC_UNROLL_LOOPS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -273,6 +350,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -309,6 +387,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_UNROLL_LOOPS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -321,6 +400,7 @@
 				LLVM_LTO = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -336,6 +416,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		A576D6031F0744F700457E31 /* Build configuration list for PBXNativeTarget "Lab" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A576D6041F0744F700457E31 /* Debug */,
+				A576D6051F0744F700457E31 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		A5C25FBC1EB1FED7002738A1 /* Build configuration list for PBXProject "Garden" */ = {
 			isa = XCConfigurationList;

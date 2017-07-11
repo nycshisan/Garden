@@ -15,6 +15,8 @@
 //#include "LineStripAndLineLoop.hpp"
 //#include "ClippingAndZTest"
 #include "ColoredLine.hpp"
+//#include "HelloTriangles.hpp"
+
 
 int main(int argc, const char *argv[]) {
     auto wc = new WindowContext(600, 600, "Garden");

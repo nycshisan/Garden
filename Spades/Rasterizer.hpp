@@ -29,29 +29,32 @@ enum DrawType {
 
 template <class Varying>
 class Rasterizer {
-    unsigned int width, height;
+    typedef Vertex<Varying> _Vertex;
+    typedef Fragment<Varying> _Fragment;
     
-    Fragment<Varying> *frags;
+    coord_t width, height;
     
-    size_t rasterizePoint(Vertex<Varying> **vertexPtrs);
-    size_t rasterizeLine(Vertex<Varying> **vertexPtrs);
-    size_t rasterizeTriangle(Vertex<Varying> **VertexPtrs);
+    _Fragment *frags;
     
-    inline coord_t getPixelX(Vertex<Varying> *v) {
+    size_t rasterizePoint(_Vertex **vertexPtrs);
+    size_t rasterizeLine(_Vertex **vertexPtrs);
+    size_t rasterizeTriangle(_Vertex **vertexPtrs);
+    
+    inline coord_t getPixelX(_Vertex *v) {
         return (coord_t)std::round(v->windowX * width);
     }
-    inline coord_t getPixelY(Vertex<Varying> *v) {
+    inline coord_t getPixelY(_Vertex *v) {
         return (coord_t)std::round(v->windowY * height);
     }
     
 public:
-    Rasterizer(unsigned int width, unsigned int height, Fragment<Varying> *frags): width(width), height(height), frags(frags) {}
+    Rasterizer(unsigned int width, unsigned int height, _Fragment *frags): width(width), height(height), frags(frags) {}
     
-    inline size_t rasterize(DrawType type, Vertex<Varying> **vertexPtrs);
+    inline size_t rasterize(DrawType type, _Vertex **vertexPtrs);
 };
 
 template <class Varying>
-inline size_t Rasterizer<Varying>::rasterize(DrawType type, Vertex<Varying> **vertexPtrs) {
+inline size_t Rasterizer<Varying>::rasterize(DrawType type, _Vertex **vertexPtrs) {
     switch (type) {
         case Points:
             return rasterizePoint(vertexPtrs);
@@ -70,9 +73,9 @@ inline size_t Rasterizer<Varying>::rasterize(DrawType type, Vertex<Varying> **ve
 }
 
 template <class Varying>
-size_t Rasterizer<Varying>::rasterizePoint(Vertex<Varying> **vertexPtrs) {
+size_t Rasterizer<Varying>::rasterizePoint(_Vertex **vertexPtrs) {
     size_t count = 0;
-    Vertex<Varying> *vertex = vertexPtrs[0];
+    _Vertex *vertex = vertexPtrs[0];
     int pointSize = vertex->pointSize;
     data_t z = vertex->position.z;
     
@@ -83,7 +86,7 @@ size_t Rasterizer<Varying>::rasterizePoint(Vertex<Varying> **vertexPtrs) {
     coord_t topY = getPixelY(vertex) - radius;
     coord_t BottomY = topY + pointSize;
     
-    Fragment<Varying> *crtFrag = frags;
+    _Fragment *crtFrag = frags;
     for (coord_t i = leftX; i < rightX; ++i) {
         for (coord_t j = topY; j < BottomY; ++j) {
             crtFrag->pixelX = i;
@@ -98,9 +101,9 @@ size_t Rasterizer<Varying>::rasterizePoint(Vertex<Varying> **vertexPtrs) {
 }
 
 template <class Varying>
-size_t Rasterizer<Varying>::rasterizeLine(Vertex<Varying> **vertexPtrs) {
+size_t Rasterizer<Varying>::rasterizeLine(_Vertex **vertexPtrs) {
     // Setup
-    Vertex<Varying> *&vertexA = vertexPtrs[0], *&vertexB = vertexPtrs[1];
+    _Vertex *&vertexA = vertexPtrs[0], *&vertexB = vertexPtrs[1];
     coord_t pixelXA = getPixelX(vertexA), pixelXB = getPixelX(vertexB), pixelYA = getPixelY(vertexA), pixelYB = getPixelY(vertexB);
     int dx = pixelXB - pixelXA, dy = pixelYB - pixelYA;
     int stepX = dx > 0 ? 1 : -1, stepY = dy > 0 ? 1 : -1;
@@ -143,7 +146,7 @@ size_t Rasterizer<Varying>::rasterizeLine(Vertex<Varying> **vertexPtrs) {
     stepVarying.multiply(1.0 / stepLength);
     
     size_t count = 0;
-    Fragment<Varying> *crtFrag = frags;
+    _Fragment *crtFrag = frags;
     
     // Bresenham algorithm
     do {
@@ -169,8 +172,58 @@ size_t Rasterizer<Varying>::rasterizeLine(Vertex<Varying> **vertexPtrs) {
 }
 
 template <class Varying>
-size_t Rasterizer<Varying>::rasterizeTriangle(Vertex<Varying> **VertexPtrs) {
-    fatalError("Unimplemented");
+size_t Rasterizer<Varying>::rasterizeTriangle(_Vertex **vertexPtrs) {
+    _Vertex *vertexA = vertexPtrs[0], *vertexB = vertexPtrs[1], *vertexC = vertexPtrs[2];
+    // Get bounding box
+    coord_t xA = vertexA->windowX, xB = vertexB->windowX, xC = vertexC->windowX;
+    coord_t yA = vertexA->windowY, yB = vertexB->windowY, yC = vertexC->windowY;
+    coord_t xLeft = std::min(std::min(xA, xB), xC), xRight = std::max(std::max(xA, xB), xC);
+    coord_t yTop = std::min(std::min(yA, yB), yC), yBottom = std::max(std::max(yA, yB), yC);
+    // Edge check
+    xLeft = std::max(xLeft, 0);
+    xRight = std::min(xRight, height - 1);
+    yTop = std::max(yTop, 0);
+    yBottom = std::min(yBottom, width - 1);
+    
+    // Calculate proportion matrix
+    vec4 &posA = vertexA->position, &posB = vertexB->position, &posC = vertexC->position;
+    mat3 pMat = {{{posA.x, posB.x, posC.x},
+                  {posA.y, posB.y, posC.y},
+                  {posA.w, posB.w, posC.w}}};
+    invert(pMat);
+    
+    // Mainloop
+    size_t count = 0;
+    vec3 pVec, windowPosVec;
+    _Fragment *crtFrag = frags;
+    data_t pSum, pA, pB, pC;
+    
+    for (coord_t crtX = xLeft; crtX <= xRight; ++crtX) {
+        for (coord_t crtY = yTop; crtY <= yBottom; ++crtY) {
+            windowPosVec = {(data_t)crtX, (data_t)crtY, 1.0};
+            pVec = pMat * windowPosVec;
+            pSum = pVec.x + pVec.y + pVec.z;
+            pVec /= pSum;
+            pA = pVec.x, pB = pVec.y, pC = pVec.z;
+            
+            if (pA < 0 || pB < 0 || pC < 0) {
+                continue;
+            }
+            
+            crtFrag->pixelX = crtX; crtFrag->pixelY = crtY;
+            crtFrag->fragZ = pA * posA.z + pB * posB.z + pC * posC.z;
+            Varying vA = vertexA->varying; vA.multiply(pA);
+            Varying vB = vertexB->varying; vB.multiply(pB);
+            Varying vC = vertexC->varying; vC.multiply(pC);
+            vA.add(vB); vA.add(vC);
+            
+            crtFrag->varying = vA;
+            
+            ++count; ++crtFrag;
+        }
+    }
+    
+    return count;
 }
 
 #endif /* Rasterizer_h */

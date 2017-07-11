@@ -20,7 +20,7 @@ class Uniform {};
 
 VERTEX_SHADER {
     v.position = a.pos;
-    v.pointSize = 250;
+    v.pointSize = 400;
 }
 
 FRAGMENT_SHADER {

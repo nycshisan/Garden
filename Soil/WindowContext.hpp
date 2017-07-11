@@ -25,7 +25,7 @@
 #include "vec.hpp"
 
 
-typedef unsigned int coord_t;
+typedef int coord_t;
 
 class WindowContext {
 private:
@@ -138,7 +138,7 @@ public:
         assert(y >= 0 && y < height);
         GLfloat *position = (pixelsFG + (x + width * y) * 4);
         
-        _mm_stream_ps(position, color.m128);
+        _mm_store_ps(position, color.m);
     }
     
     void setFPSBoundary(double fps) {

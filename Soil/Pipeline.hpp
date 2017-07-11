@@ -24,20 +24,23 @@
 
 template <class Attribute, class Uniform, class Varying>
 class Pipeline {
-private:
-    unsigned int width, height;
+    typedef Rasterizer<Varying> _Rasterizer;
+    typedef Vertex<Varying> _Vertex;
+    typedef Fragment<Varying> _Fragment;
+    
+    coord_t width, height;
     WindowContext *wc;
     
-    Rasterizer<Varying> *rasterizer;
+    _Rasterizer *rasterizer;
     
-    Fragment<Varying> *frags;
+    _Fragment *frags;
     
-    void makeVertex(typename std::vector<Attribute>::iterator &iter, Vertex<Varying> &v) {
+    inline void makeVertex(typename std::vector<Attribute>::iterator &iter, _Vertex &v) {
         vertexShader(*(iter++), v);
         v.convertToWindowCoord();
     }
     
-    void drawWithVertexPtrs(DrawType type, Vertex<Varying> **vertexPtrs);
+    void drawWithVertexPtrs(DrawType type, _Vertex **vertexPtrs);
     
 public:
     data_t zClippingFrontSurface = NAN, zClippingBackSurface = NAN;
@@ -48,13 +51,13 @@ public:
     std::vector<int>::iterator indexBufferIter;
     Uniform uniform;
     
-    std::function<void(const Attribute &, Vertex<Varying> &)> vertexShader;
-    std::function<void(const Fragment<Varying> &, const Uniform &, vec4 &)> fragmentShader;
+    std::function<void(const Attribute &, _Vertex &)> vertexShader;
+    std::function<void(const _Fragment &, const Uniform &, vec4 &)> fragmentShader;
     
     Pipeline(WindowContext *wc): wc(wc) {
         this->width = wc->width; this->height = wc->height;
-        this->frags = new Fragment<Varying>[width * height];
-        this->rasterizer = new Rasterizer<Varying>(width, height, frags);
+        this->frags = new _Fragment[width * height];
+        this->rasterizer = new _Rasterizer(width, height, frags);
     }
     
     void draw(DrawType type);
@@ -97,27 +100,27 @@ void Pipeline<Attribute, Uniform, Varying>::draw(DrawType type) {
     
     assert(vertexBuffer.size() >= vertexNumber); // Check buffer size
     
-    Vertex<Varying> vertexPool[vertexNumber]; // Store the materials of vertexes
-    Vertex<Varying> *vertexPtrs[vertexNumber]; // Store the pointers of vertexes for rasterizer
+    _Vertex vertexPool[vertexNumber]; // Store the materials of vertexes
+    _Vertex *vertexPtrs[vertexNumber]; // Store the pointers of vertexes for rasterizer
     
-    // Index of Vertex<Varying> pointer to be filled for striping drawing.
+    // Index of vertex pointer to be filled for striping drawing.
     // Initialize it with -1 to slience warnings, but it will be really initialized before being used.
     size_t crtVertexPoolIndex = -1;
     
-    // The pointer of the first Vertex<Varying> for LineLoop drawing
-    Vertex<Varying> *firstVertex = nullptr;
+    // The pointer of the first vertex for LineLoop drawing
+    _Vertex *firstVertex = nullptr;
     
     // Masks for TriangleFan drawing. Striping drawing should use these masks rather than the original arrays
-    Vertex<Varying> *vertexPoolMask = vertexPool;
-    Vertex<Varying> **vertexPtrsMask = vertexPtrs;
+    _Vertex *vertexPoolMask = vertexPool;
+    _Vertex **vertexPtrsMask = vertexPtrs;
     
     // Setup
     vertexBufferIter = vertexBuffer.begin();
     if (isStrip) {
-        // Set up the begining Vertex<Varying> pool for striping drawing
+        // Set up the begining vertex pool for striping drawing
         if (isFan) {
-            fatalError("unimplemented");
             // The first vertex(centroid) are static, and the others are the same as striping drawing.
+            makeVertex(vertexBufferIter, vertexPool[0]);
             --vertexNumber;
             ++vertexPoolMask;
             ++vertexPtrsMask;
@@ -131,17 +134,17 @@ void Pipeline<Attribute, Uniform, Varying>::draw(DrawType type) {
         crtVertexPoolIndex = 0;
         
         if (isLoop) {
-            // Store the first Vertex<Varying> information for LineLoop drawing.
-            // Now the first Vertex<Varying> locates in the second(index 1) slot in the Vertex<Varying> pool
-            firstVertex = new Vertex<Varying>(vertexPoolMask[1]);
+            // Store the first vertex information for LineLoop drawing.
+            // The first vertex locates in the second(index 1) slot in the vertex pool
+            firstVertex = new _Vertex(vertexPoolMask[1]);
         }
 
     } else {
-        // For Point, Line and Triangle, Vertex<Varying> pointers are static
+        // For Point, Line and Triangle, vertex pointers are static
         for (size_t i = 0; i < vertexNumber; ++i) {
             vertexPtrs[i] = vertexPool + i;
         }
-        // Buffer size must be a mutiple of Vertex<Varying> number
+        // Buffer size must be a mutiple of vertex number
         assert(vertexBuffer.size() % vertexNumber == 0);
     }
     
@@ -150,12 +153,12 @@ void Pipeline<Attribute, Uniform, Varying>::draw(DrawType type) {
     while (vertexBufferIter != vertexBuffer.end()) {
         // Make vertexes
         if (isStrip) {
-            // L-shift the Vertex<Varying> pointers
+            // L-shift the vertex pointers
             for (size_t i = 0; i < vertexNumber - 1; ++i) {
                 vertexPtrsMask[i] = vertexPtrsMask[i + 1];
             }
             
-            // Make new Vertex<Varying> and fill the last pointer
+            // Make new vertex and fill the last pointer
             makeVertex(vertexBufferIter, vertexPoolMask[crtVertexPoolIndex]);
             vertexPtrsMask[vertexNumber - 1] = vertexPoolMask + crtVertexPoolIndex;
             
@@ -172,10 +175,10 @@ void Pipeline<Attribute, Uniform, Varying>::draw(DrawType type) {
     
     // The last edge for LineLoop drawing
     if (isLoop) {
-        // The pointer of the last Vertex<Varying> is always the last element of vertexPtrs
-        Vertex<Varying> *lastVertex = vertexPtrsMask[vertexNumber - 1];
+        // The pointer of the last vertex is always the last element of vertexPtrs
+        _Vertex *lastVertex = vertexPtrsMask[vertexNumber - 1];
         
-        Vertex<Varying> *lastVertexPtrs[vertexNumber];
+        _Vertex *lastVertexPtrs[vertexNumber];
         lastVertexPtrs[0] = lastVertex; lastVertexPtrs[1] = firstVertex;
         
         drawWithVertexPtrs(type, lastVertexPtrs);
@@ -190,17 +193,17 @@ void Pipeline<Attribute, Uniform, Varying>::drawElement(DrawType type) {
 }
 
 template <class Attribute, class Uniform, class Varying>
-void Pipeline<Attribute, Uniform, Varying>::drawWithVertexPtrs(DrawType type, Vertex<Varying> **vertexPtrs) {
+void Pipeline<Attribute, Uniform, Varying>::drawWithVertexPtrs(DrawType type, _Vertex **vertexPtrs) {
     // Rasterize
     size_t fragNumber = rasterizer->rasterize(type, vertexPtrs);
     
     // Shade fragments
-    Fragment<Varying> *fragEnd = frags + fragNumber;
+    _Fragment *fragEnd = frags + fragNumber;
     vec4 color;
-    for (Fragment<Varying> *frag = frags; frag < fragEnd; ++frag) {
+    for (_Fragment *frag = frags; frag < fragEnd; ++frag) {
         coord_t pixelX = frag->pixelX, pixelY = frag->pixelY;
         // Clipping
-        if (pixelX >= width || pixelY >= height) {
+        if (pixelX < 0 || pixelY < 0 || pixelX >= width || pixelY >= height) {
             continue;
         }
         if (!isnan(zClippingFrontSurface) && frag->fragZ > zClippingFrontSurface) {
