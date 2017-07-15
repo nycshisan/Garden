@@ -14,8 +14,8 @@
 //#include "HelloLines.hpp"
 //#include "LineStripAndLineLoop.hpp"
 //#include "ClippingAndZTest"
-#include "ColoredLine.hpp"
-//#include "HelloTriangles.hpp"
+//#include "ColoredLine.hpp"
+#include "HelloTriangles.hpp"
 
 
 int main(int argc, const char *argv[]) {

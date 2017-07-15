@@ -175,8 +175,8 @@ template <class Varying>
 size_t Rasterizer<Varying>::rasterizeTriangle(_Vertex **vertexPtrs) {
     _Vertex *vertexA = vertexPtrs[0], *vertexB = vertexPtrs[1], *vertexC = vertexPtrs[2];
     // Get bounding box
-    coord_t xA = vertexA->windowX, xB = vertexB->windowX, xC = vertexC->windowX;
-    coord_t yA = vertexA->windowY, yB = vertexB->windowY, yC = vertexC->windowY;
+    coord_t xA = getPixelX(vertexA), xB = getPixelX(vertexB), xC = getPixelX(vertexC);
+    coord_t yA = getPixelY(vertexA), yB = getPixelY(vertexB), yC = getPixelY(vertexC);
     coord_t xLeft = std::min(std::min(xA, xB), xC), xRight = std::max(std::max(xA, xB), xC);
     coord_t yTop = std::min(std::min(yA, yB), yC), yBottom = std::max(std::max(yA, yB), yC);
     // Edge check
@@ -187,21 +187,27 @@ size_t Rasterizer<Varying>::rasterizeTriangle(_Vertex **vertexPtrs) {
     
     // Calculate proportion matrix
     vec4 &posA = vertexA->position, &posB = vertexB->position, &posC = vertexC->position;
-    mat3 pMat = {{{posA.x, posB.x, posC.x},
-                  {posA.y, posB.y, posC.y},
-                  {posA.w, posB.w, posC.w}}};
+    mat3 pMat = {{{posA.x, posA.y, posA.w},
+                  {posB.x, posB.y, posB.w},
+                  {posC.x, posC.y, posC.w}}};
     invert(pMat);
     
     // Mainloop
     size_t count = 0;
-    vec3 pVec, windowPosVec;
+    vec3 pVec, posVec;
     _Fragment *crtFrag = frags;
     data_t pSum, pA, pB, pC;
     
-    for (coord_t crtX = xLeft; crtX <= xRight; ++crtX) {
-        for (coord_t crtY = yTop; crtY <= yBottom; ++crtY) {
-            windowPosVec = {(data_t)crtX, (data_t)crtY, 1.0};
-            pVec = pMat * windowPosVec;
+    data_t posXLeft = (data_t)xLeft / width * 2.0 - 1, posXRight = (data_t)xRight / width * 2.0 - 1, posXStep = (posXRight - posXLeft) / (xRight - xLeft);
+    data_t posYTop = (data_t)yTop / height * -2.0 + 1, posYBottom = (data_t)yBottom / height * -2.0 + 1, posYStep = (posYBottom - posYTop) / (yBottom - yTop);
+    
+    data_t crtPosX = posXLeft;
+    
+    for (coord_t crtX = xLeft; crtX <= xRight; ++crtX, crtPosX += posXStep) {
+        data_t crtPosY = posYTop;
+        for (coord_t crtY = yTop; crtY <= yBottom; ++crtY, crtPosY += posYStep) {
+            posVec = {crtPosX, crtPosY, 1.0};
+            pVec = pMat * posVec;
             pSum = pVec.x + pVec.y + pVec.z;
             pVec /= pSum;
             pA = pVec.x, pB = pVec.y, pC = pVec.z;

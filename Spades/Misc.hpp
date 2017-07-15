@@ -25,9 +25,9 @@ typedef float data_t;
 /*
  * The Varying class definition helper macro is defined here.
  * Cuz C++ does not support a flexible reflection machansim and some kind of preprocess-time
- * meta-programing, and I do not want to introduce an external build system to do this,
+ * meta-programming, and I do not want to introduce an external build system to do this,
  * I have to abuse the preprocessor to make the helper.
- * Some ideas could be referenced at https://github.com/pfultz2/Cloak/wiki/C-Preprocessor-tricks,-tips,-and-idioms
+ * Some ideas are from https://github.com/pfultz2/Cloak/wiki/C-Preprocessor-tricks,-tips,-and-idioms
  */
 
 /*
@@ -46,13 +46,13 @@ typedef float data_t;
 #define __CHECK_INTERNAL(PLACEHOLDER, CHOICE, ...) CHOICE
 #define __CHECK(OPTION) __CHECK_INTERNAL(OPTION, FIRST)
 
-// The macro `__SELECTOR` will pick one of these two macros to simulate a selector.
+// The macro `__SELECTOR_INTERNAL` will pick one of these two macros to simulate a selector.
 #define __SELECTOR_FIRST(FIRST, SECOND) FIRST
 #define __SELECTOR_SECOND(FIRST, SECOND) SECOND
 #define __SELECTOR_INTERNAL(A, B) CONCAT(__SELECTOR_, __CHECK(__PROBE(A, B)))
 
 // Get the first arguments for checking.
-// GCC allows a macro defined like `MACRO(A, ...)` accept zero arguments.
+// LLVM allows a macro defined like `MACRO(A, ...)` to accept zero arguments.
 #define __PICK_FIRST(FIRST, ...) FIRST
 #define __SELECTOR(A, ...) __SELECTOR_INTERNAL(A, __PICK_FIRST(__VA_ARGS__))
 
