@@ -51,6 +51,7 @@
 		A576D5FA1F06614400457E31 /* Mat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Mat.hpp; path = Spades/Mat.hpp; sourceTree = "<group>"; };
 		A576D5FF1F0744F700457E31 /* Lab */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Lab; sourceTree = BUILT_PRODUCTS_DIR; };
 		A576D6011F0744F700457E31 /* Lab.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Lab.cpp; sourceTree = "<group>"; };
+		A57BAEE81F19B0F60038C94F /* ColoredTriangle.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ColoredTriangle.hpp; path = Seeds/ColoredTriangle.hpp; sourceTree = "<group>"; };
 		A5C25FCC1EB1FEE7002738A1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		A5C25FCE1EB1FEFF002738A1 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../usr/local/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
 		A5F1CCDD1F0296EA00180000 /* SeedsHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SeedsHelper.hpp; path = Fertilizers/SeedsHelper.hpp; sourceTree = "<group>"; };
@@ -104,6 +105,7 @@
 				A5F1CCE21F03B67F00180000 /* ClippingAndZTest.hpp */,
 				A576D5F51F05244D00457E31 /* ColoredLine.hpp */,
 				A576D5F91F06559500457E31 /* HelloTriangles.hpp */,
+				A57BAEE81F19B0F60038C94F /* ColoredTriangle.hpp */,
 			);
 			name = Seeds;
 			sourceTree = "<group>";
@@ -424,6 +426,7 @@
 				A576D6051F0744F700457E31 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A5C25FBC1EB1FED7002738A1 /* Build configuration list for PBXProject "Garden" */ = {
 			isa = XCConfigurationList;
