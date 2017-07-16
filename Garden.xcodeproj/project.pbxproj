@@ -52,6 +52,8 @@
 		A576D5FF1F0744F700457E31 /* Lab */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Lab; sourceTree = BUILT_PRODUCTS_DIR; };
 		A576D6011F0744F700457E31 /* Lab.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Lab.cpp; sourceTree = "<group>"; };
 		A57BAEE81F19B0F60038C94F /* ColoredTriangle.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ColoredTriangle.hpp; path = Seeds/ColoredTriangle.hpp; sourceTree = "<group>"; };
+		A57BAEE91F1A71F00038C94F /* BufferCursor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = BufferCursor.hpp; path = Spades/BufferCursor.hpp; sourceTree = "<group>"; };
+		A57BAEEA1F1B3F800038C94F /* HelloElements.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HelloElements.hpp; path = Seeds/HelloElements.hpp; sourceTree = "<group>"; };
 		A5C25FCC1EB1FEE7002738A1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		A5C25FCE1EB1FEFF002738A1 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../usr/local/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
 		A5F1CCDD1F0296EA00180000 /* SeedsHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SeedsHelper.hpp; path = Fertilizers/SeedsHelper.hpp; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				A5323F591EB9AE6800532E6F /* Rasterizer.hpp */,
+				A57BAEE91F1A71F00038C94F /* BufferCursor.hpp */,
 				A5323F5A1EB9AE9400532E6F /* Vertex.hpp */,
 				A5323F5B1EB9AEA600532E6F /* Fragment.hpp */,
 				A5323F5D1EB9B22600532E6F /* Vec.hpp */,
@@ -106,6 +109,7 @@
 				A576D5F51F05244D00457E31 /* ColoredLine.hpp */,
 				A576D5F91F06559500457E31 /* HelloTriangles.hpp */,
 				A57BAEE81F19B0F60038C94F /* ColoredTriangle.hpp */,
+				A57BAEEA1F1B3F800038C94F /* HelloElements.hpp */,
 			);
 			name = Seeds;
 			sourceTree = "<group>";

@@ -16,11 +16,13 @@
 #include <functional>
 
 #include "WindowContext.hpp"
+#include "BufferCursor.hpp"
 #include "Vertex.hpp"
 #include "Fragment.hpp"
 #include "Rasterizer.hpp"
 #include "Misc.hpp"
 
+#define MAX_VERTEX_NUM 3
 
 template <class Attribute, class Uniform, class Varying>
 class Pipeline {
@@ -33,22 +35,34 @@ class Pipeline {
     
     _Rasterizer *rasterizer;
     
+    // Fragment pool, will be filled by the rasterizer
     _Fragment *frags;
     
-    inline void makeVertex(typename std::vector<Attribute>::iterator &iter, _Vertex &v) {
-        vertexShader(*(iter++), v);
+    // Vertex pool, will be filled in the `drawVertexes` step and be used in the `drawFragments` step
+    _Vertex vertexPool[MAX_VERTEX_NUM]; // Store the materials of vertexes
+    _Vertex *vertexPtrs[MAX_VERTEX_NUM]; // Store the pointers of vertexes for rasterizer
+    
+    // Current draw type
+    DrawType type;
+    
+    // Cursor for visiting vertex buffer and index buffer
+    BufferCursor<Attribute> cursor = BufferCursor<Attribute>(vertexBuffer, indexBuffer);
+    
+    // This function will materialize the passed vertex, and increase the buffer cursor
+    ALWAYS_INLINE void _makeVertex(_Vertex &v) {
+        vertexShader(*cursor, v);
+        ++cursor;
         v.convertToWindowCoord();
     }
     
-    void drawWithVertexPtrs(DrawType type, _Vertex **vertexPtrs);
+    void drawVertexes();
+    void drawFragments();
     
 public:
     data_t zClippingFrontSurface = NAN, zClippingBackSurface = NAN;
     
     std::vector<Attribute> vertexBuffer;
-    typename std::vector<Attribute>::iterator vertexBufferIter;
-    std::vector<int> indexBuffer;
-    std::vector<int>::iterator indexBufferIter;
+    std::vector<size_t> indexBuffer;
     Uniform uniform;
     
     std::function<void(const Attribute &, _Vertex &)> vertexShader;
@@ -61,7 +75,7 @@ public:
     }
     
     void draw(DrawType type);
-    void drawElement(DrawType type);
+    void drawElements(DrawType type);
     
     ~Pipeline() {
         delete rasterizer;
@@ -70,7 +84,7 @@ public:
 };
 
 template <class Attribute, class Uniform, class Varying>
-void Pipeline<Attribute, Uniform, Varying>::draw(DrawType type) {
+void Pipeline<Attribute, Uniform, Varying>::drawVertexes() {
     size_t vertexNumber;
     bool isStrip = false, isFan = false, isLoop = false;
     switch (type) {
@@ -98,10 +112,7 @@ void Pipeline<Attribute, Uniform, Varying>::draw(DrawType type) {
             fatalError("Unknown draw type"); // Should never reach here
     }
     
-    assert(vertexBuffer.size() >= vertexNumber); // Check buffer size
-    
-    _Vertex vertexPool[vertexNumber]; // Store the materials of vertexes
-    _Vertex *vertexPtrs[vertexNumber]; // Store the pointers of vertexes for rasterizer
+    assert(cursor.size() >= vertexNumber); // Check buffer size
     
     // Index of vertex pointer to be filled for striping drawing.
     // Initialize it with -1 to slience warnings, but it will be really initialized before being used.
@@ -115,12 +126,12 @@ void Pipeline<Attribute, Uniform, Varying>::draw(DrawType type) {
     _Vertex **vertexPtrsMask = vertexPtrs;
     
     // Setup
-    vertexBufferIter = vertexBuffer.begin();
+    cursor.begin();
     if (isStrip) {
         // Set up the begining vertex pool for striping drawing
         if (isFan) {
             // The first vertex(centroid) are static, and the others are the same as striping drawing.
-            makeVertex(vertexBufferIter, vertexPool[0]);
+            _makeVertex(vertexPool[0]);
             --vertexNumber;
             ++vertexPoolMask;
             ++vertexPtrsMask;
@@ -128,7 +139,7 @@ void Pipeline<Attribute, Uniform, Varying>::draw(DrawType type) {
         
         // At the beginging, the poll are fully materialized except the first slot
         for (size_t i = 1; i < vertexNumber; ++i) {
-            makeVertex(vertexBufferIter, vertexPoolMask[i]);
+            _makeVertex(vertexPoolMask[i]);
             vertexPtrsMask[i] = &vertexPoolMask[i];
         }
         crtVertexPoolIndex = 0;
@@ -145,12 +156,12 @@ void Pipeline<Attribute, Uniform, Varying>::draw(DrawType type) {
             vertexPtrs[i] = vertexPool + i;
         }
         // Buffer size must be a mutiple of vertex number
-        assert(vertexBuffer.size() % vertexNumber == 0);
+        assert(cursor.size() % vertexNumber == 0);
     }
     
     
     // Mainloop
-    while (vertexBufferIter != vertexBuffer.end()) {
+    while (!cursor.end()) {
         // Make vertexes
         if (isStrip) {
             // L-shift the vertex pointers
@@ -159,18 +170,18 @@ void Pipeline<Attribute, Uniform, Varying>::draw(DrawType type) {
             }
             
             // Make new vertex and fill the last pointer
-            makeVertex(vertexBufferIter, vertexPoolMask[crtVertexPoolIndex]);
+            _makeVertex(vertexPoolMask[crtVertexPoolIndex]);
             vertexPtrsMask[vertexNumber - 1] = vertexPoolMask + crtVertexPoolIndex;
             
             crtVertexPoolIndex = (crtVertexPoolIndex + 1) % vertexNumber;
         } else {
             // For Point, Line and Triangle, just get new vertexes
             for (size_t i = 0; i < vertexNumber; ++i) {
-                makeVertex(vertexBufferIter, vertexPool[i]);
+                _makeVertex(vertexPool[i]);
             }
         }
         
-        drawWithVertexPtrs(type, vertexPtrs);
+        drawFragments();
     }
     
     // The last edge for LineLoop drawing
@@ -178,22 +189,16 @@ void Pipeline<Attribute, Uniform, Varying>::draw(DrawType type) {
         // The pointer of the last vertex is always the last element of vertexPtrs
         _Vertex *lastVertex = vertexPtrsMask[vertexNumber - 1];
         
-        _Vertex *lastVertexPtrs[vertexNumber];
-        lastVertexPtrs[0] = lastVertex; lastVertexPtrs[1] = firstVertex;
+        vertexPtrs[0] = lastVertex; vertexPtrs[1] = firstVertex;
         
-        drawWithVertexPtrs(type, lastVertexPtrs);
+        drawFragments();
         
         delete firstVertex;
     }
 }
 
 template <class Attribute, class Uniform, class Varying>
-void Pipeline<Attribute, Uniform, Varying>::drawElement(DrawType type) {
-    fatalError("Unimplemented");
-}
-
-template <class Attribute, class Uniform, class Varying>
-void Pipeline<Attribute, Uniform, Varying>::drawWithVertexPtrs(DrawType type, _Vertex **vertexPtrs) {
+void Pipeline<Attribute, Uniform, Varying>::drawFragments() {
     // Rasterize
     size_t fragNumber = rasterizer->rasterize(type, vertexPtrs);
     
@@ -213,9 +218,25 @@ void Pipeline<Attribute, Uniform, Varying>::drawWithVertexPtrs(DrawType type, _V
             continue;
         }
         
+        // Z-test - undo
+        
         fragmentShader(*frag, uniform, color);
         wc->setPixel(pixelX, pixelY, color);
     }
+}
+
+template <class Attribute, class Uniform, class Varying>
+void Pipeline<Attribute, Uniform, Varying>::draw(DrawType type) {
+    this->type = type;
+    cursor.type = BufferCursor<Attribute>::BufferCursorType::Direct;
+    drawVertexes();
+}
+
+template <class Attribute, class Uniform, class Varying>
+void Pipeline<Attribute, Uniform, Varying>::drawElements(DrawType type) {
+    this->type = type;
+    cursor.type = BufferCursor<Attribute>::BufferCursorType::Element;
+    drawVertexes();
 }
 
 #endif /* Pipeline_hpp */
