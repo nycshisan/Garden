@@ -28,8 +28,10 @@
 typedef int coord_t;
 
 class WindowContext {
+    template <class Attribute, class Uniform, class Varying>
+    friend class Pipeline;
 private:
-    GLfloat *pixelsFG = nullptr, *pixelsBG = nullptr;
+    GLfloat *pixelsFG = nullptr, *pixelsBG = nullptr, *zBuffer = nullptr;
     
     double lastFrameTime = 0.0;
     double fpsBoundary = 0.0;
@@ -76,8 +78,12 @@ private:
     
     bool initWindow();
     
-    void clearPixel(GLfloat *p) {
-        memset(p, 0, sizeof(GLfloat) * width * height * 4);
+    void clearPixel(GLfloat *ptr) {
+        memset(ptr, 0, sizeof(GLfloat) * width * height * 4);
+    }
+    
+    void clearZBuffer() {
+        memset(zBuffer, 0, sizeof(zBuffer) * width * height);
     }
     
     void boundFPS() {
@@ -93,12 +99,19 @@ private:
     }
     
     void updateFPS() {
+        static int updateCount = 0, updateInterval = 10; // Update FPS per 10 frames
         double interval = glfwGetTime() - lastFrameTime;
         double fps = 1 / interval;
         sprintf(titleBuffer, "%s - FPS: %.1f", title, fps);
-        glfwSetWindowTitle(window, titleBuffer);
+        if (updateCount % updateInterval == 0) {
+            glfwSetWindowTitle(window, titleBuffer);
+            updateCount = 0;
+        }
+        ++updateCount;
     }
     
+    // Configures
+    bool enabledZTest = false;
     
 public:
     unsigned int width = 0, height = 0;
@@ -123,6 +136,9 @@ public:
         glfwSwapBuffers(window);
         std::swap(pixelsFG, pixelsBG);
         clearPixel(pixelsBG);
+        if (enabledZTest) {
+            clearZBuffer();
+        }
         updateFPS();
         boundFPS();
         
@@ -150,8 +166,19 @@ public:
     ~WindowContext() {
         delete[] pixelsFG;
         delete[] pixelsBG;
+        delete[] zBuffer;
         glfwDestroyWindow(window);
         glfwTerminate();
+    }
+    
+    // Configure interfaces
+    void enableZTest() {
+        enabledZTest = true;
+        clearZBuffer(); // Clear z-buffer for the presentation of the next frame
+    }
+    
+    void disableZTest() {
+        enabledZTest = false;
     }
 };
 
@@ -225,9 +252,10 @@ bool WindowContext::initWindow() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
-    // Initialize pixels
+    // Initialize pixels and z-buffer
     pixelsFG = new GLfloat[width * height * 4];
     pixelsBG = new GLfloat[width * height * 4];
+    zBuffer = new GLfloat[width * height];
     
     return true;
 }

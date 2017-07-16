@@ -58,6 +58,8 @@ class Pipeline {
     void drawVertexes();
     void drawFragments();
     
+    GLfloat *zBuffer;
+    
 public:
     data_t zClippingFrontSurface = NAN, zClippingBackSurface = NAN;
     
@@ -72,6 +74,7 @@ public:
         this->width = wc->width; this->height = wc->height;
         this->frags = new _Fragment[width * height];
         this->rasterizer = new _Rasterizer(width, height, frags);
+        this->zBuffer = wc->zBuffer;
     }
     
     void draw(DrawType type);
@@ -218,7 +221,16 @@ void Pipeline<Attribute, Uniform, Varying>::drawFragments() {
             continue;
         }
         
-        // Z-test - undo
+        // Z-test
+        if (wc->enabledZTest) {
+            frag->normalizeZ();
+            GLfloat *zBufPtr = zBuffer + pixelX * width + pixelY;
+            if (frag->normalizedZ <= *zBufPtr) {
+                continue;
+            } else {
+                *zBufPtr = frag->normalizedZ;
+            }
+        }
         
         fragmentShader(*frag, uniform, color);
         wc->setPixel(pixelX, pixelY, color);

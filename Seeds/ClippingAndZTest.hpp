@@ -16,7 +16,7 @@ public:
 
 class Uniform {
 public:
-    vec4 color = {1.0, 1.0, 1.0, 1.0};
+    vec4 color;
 };
 
 #define Varying NullVarying
@@ -31,19 +31,46 @@ FRAGMENT_SHADER {
 
 PREPARE {
     Attribute attr;
+    data_t base, upZ;
     
-    data_t base = -0.3;
+    base = -0.3;
+    attr.pos = {0.5, base, 1.0, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    attr.pos = {-0.5, base, 1.0, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    upZ = base + 1.0 * sqrtf(3) / 2.0;
+    attr.pos = {0.0, upZ, 1.0, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    
+    base = -0.1;
+    attr.pos = {0.5, base, 0.5, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    attr.pos = {-0.5, base, 0.5, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    upZ = base + 1.0 * sqrtf(3) / 2.0;
+    attr.pos = {0.0, upZ, 0.5, 1.0};
+    pipeline.vertexBuffer.push_back(attr);
+    
+    base = 0.1;
     attr.pos = {0.5, base, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
     attr.pos = {-0.5, base, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
-    data_t upZ = base + 1.0 * sqrtf(3) / 2.0;
+    upZ = base + 1.0 * sqrtf(3) / 2.0;
     attr.pos = {0.0, upZ, 0.0, 1.0};
     pipeline.vertexBuffer.push_back(attr);
 }
 
 DRAW {
-    pipeline.draw(Triangles);
+    pipeline.uniform.color = {1.0, 0.0, 0.0, 1.0};
+    pipeline.indexBuffer = {0, 1, 2};
+    pipeline.drawElements(Triangles);
+    pipeline.uniform.color = {0.0, 1.0, 0.0, 1.0};
+    pipeline.indexBuffer = {3, 4, 5};
+    pipeline.drawElements(Triangles);
+    pipeline.uniform.color = {0.0, 0.0, 1.0, 1.0};
+    pipeline.indexBuffer = {6, 7, 8};
+    pipeline.drawElements(Triangles);
 }
 
 #endif /* ClippingAndZTest_h */

@@ -13,7 +13,7 @@
 //#include "HelloPoints.hpp"
 //#include "HelloLines.hpp"
 //#include "LineStripAndLineLoop.hpp"
-#include "ClippingAndZTest"
+#include "ClippingAndZTest.hpp"
 //#include "ColoredLine.hpp"
 //#include "HelloTriangles.hpp"
 //#include "ColoredTriangle.hpp"
@@ -22,6 +22,7 @@
 int main(int argc, const char *argv[]) {
     auto wc = new WindowContext(600, 600, "Garden");
     wc->setFPSBoundary(60.0);
+    wc->enableZTest();
     Pipeline<Attribute, Uniform, Varying> pipeline(wc);
     pipeline.vertexShader = vertexShader;
     pipeline.fragmentShader = fragmentShader;

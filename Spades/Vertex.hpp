@@ -17,7 +17,7 @@ class Vertex {
     template <class Attribute, class Uniform, class _Varying>
     friend class Pipeline;
     
-    void convertToWindowCoord() {
+    ALWAYS_INLINE void convertToWindowCoord() {
         windowX = (position.x / position.w + 1.0) / 2;
         windowY = -(position.y / position.w - 1.0) / 2;
     }
