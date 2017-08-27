@@ -19,51 +19,55 @@ class BufferCursor {
     friend class Pipeline;
     
     enum BufferCursorType {
-        Direct,
+        Array,
         Element
     };
     
-    BufferCursorType type;
+    BufferCursorType cursorType;
     
-    std::vector<Attribute> &vertexBuffer;
+    std::vector<Attribute> &attributeBuffer;
     std::vector<size_t> &indexBuffer;
     
-    size_t index;
+    size_t _index;
     
-    BufferCursor(std::vector<Attribute> &vertexBuffer, std::vector<size_t> &indexBuffer): vertexBuffer(vertexBuffer), indexBuffer(indexBuffer) {}
+    BufferCursor(std::vector<Attribute> &attributeBuffer, std::vector<size_t> &indexBuffer): attributeBuffer(attributeBuffer), indexBuffer(indexBuffer) {}
     
     ALWAYS_INLINE Attribute& operator * () {
-        if (type == Direct) {
-            // draw mode
-            return vertexBuffer[index];
+        if (cursorType == Array) {
+            // drawVertexes mode
+            return attributeBuffer[_index];
         } else {
             // drawElements mode
-            return vertexBuffer[indexBuffer[index]];
+            return attributeBuffer[indexBuffer[_index]];
         }
     }
     
     ALWAYS_INLINE void operator ++ () {
-        ++index;
+        ++_index;
     }
     
     ALWAYS_INLINE void begin() {
-        index = 0;
+        _index = 0;
+    }
+    
+    ALWAYS_INLINE void set(size_t index) {
+        _index = index;
     }
     
     ALWAYS_INLINE bool end() {
-        if (type == Direct) {
-            // draw mode
-            return index == vertexBuffer.size();
+        if (cursorType == Array) {
+            // drawArrays mode
+            return _index == attributeBuffer.size();
         } else {
             // drawElements mode
-            return index == indexBuffer.size();
+            return _index == indexBuffer.size();
         }
     }
     
     ALWAYS_INLINE size_t size() {
-        if (type == Direct) {
-            // draw mode
-            return vertexBuffer.size();
+        if (cursorType == Array) {
+            // drawArrays mode
+            return attributeBuffer.size();
         } else {
             // drawElements mode
             return indexBuffer.size();

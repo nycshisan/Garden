@@ -24,14 +24,10 @@ public:
     
     // This function is used to normalize the `z` value to [0, 1] for z-testing
     ALWAYS_INLINE void normalizeZ() {
-        if (fragZ == 0) {
-            normalizedZ = 0.5;
+        if (fragZ < 0) {
+            normalizedZ = fragZ / -2.0;
         } else {
-            if (fragZ < 0) {
-                normalizedZ = fragZ / -2.0;
-            } else {
-                normalizedZ = fragZ / 2.0 + 0.5;
-            }
+            normalizedZ = fragZ / 2.0 + 0.5;
         }
     }
 };

@@ -112,4 +112,10 @@ DEF_VEC_DOT(4)
 
 #undef DEF_VEC_DOT
 
+
+// Frequently used constant vectors
+namespace Color {
+    vec4 white = {1.0, 1.0, 1.0, 1.0};
+}
+
 #endif /* Vec_h */

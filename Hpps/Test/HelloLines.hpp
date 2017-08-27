@@ -31,88 +31,88 @@ PREPARE {
     
     // Axes
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {0.0, 0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {0.5, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {0.0, -0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {-0.5, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     
     // First quadrant
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {0.5, 0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {0.5, 0.25, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {0.25, 0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     
     // Second quadrant
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {-0.5, 0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {-0.5, 0.25, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {-0.25, 0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     
     // Third quadrant
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {-0.5, -0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {-0.5, -0.25, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {-0.25, -0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     
     // Fourth quadrant
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {0.5, -0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {0.5, -0.25, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     
     attr.pos = {0.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {0.25, -0.5, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
 }
 
 DRAW {

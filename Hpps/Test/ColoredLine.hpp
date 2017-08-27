@@ -35,10 +35,10 @@ PREPARE {
     
     attr.pos = {-0.5, -0.5, 0.0, 1.0};
     attr.color = {1.0, 0.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {0.5, 0.5, 0.0, 1.0};
     attr.color = {0.0, 1.0, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
 }
 
 DRAW {

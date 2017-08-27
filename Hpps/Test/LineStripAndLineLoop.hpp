@@ -1,23 +1,20 @@
 //
-//  HelloTriangles.hpp
+//  LineStripAndLineLoop.hpp
 //  Garden
 //
-//  Created by Nycshisan on 2017/6/30.
+//  Created by Nycshisan on 2017/6/28.
 //  Copyright © 2017年 陈十三. All rights reserved.
 //
 
-#ifndef HelloTriangles_h
-#define HelloTriangles_h
+#ifndef LineStripAndLineLoop_h
+#define LineStripAndLineLoop_h
 
 class Attribute {
 public:
     vec4 pos;
 };
 
-class Uniform {
-public:
-    vec4 color = {1.0, 1.0, 1.0, 1.0};
-};
+class Uniform {};
 
 #define Varying NullVarying
 
@@ -26,7 +23,7 @@ VERTEX_SHADER {
 }
 
 FRAGMENT_SHADER {
-    color = u.color;
+    color = {1.0, 1.0, 1.0, 1.0};
 }
 
 PREPARE {
@@ -34,16 +31,16 @@ PREPARE {
     
     data_t base = -0.3;
     attr.pos = {0.5, base, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     attr.pos = {-0.5, base, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
     data_t upZ = base + 1.0 * sqrtf(3) / 2.0;
     attr.pos = {0.0, upZ, 0.0, 1.0};
-    pipeline.vertexBuffer.push_back(attr);
+    pipeline.attributeBuffer.push_back(attr);
 }
 
 DRAW {
-    pipeline.draw(Triangles);
+    pipeline.draw(LineLoop);
 }
 
-#endif /* HelloTriangles_h */
+#endif /* LineStripAndLineLoop_h */

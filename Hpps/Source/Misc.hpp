@@ -9,7 +9,23 @@
 #ifndef Misc_h
 #define Misc_h
 
+#include "Vec.hpp"
+
 typedef float data_t;
+
+enum PolygonType {
+    Points,
+    Lines,
+    LinesAdj,
+    LineStrip,
+    LineStripAdj,
+    LineLoop,
+    Triangles,
+    TrianglesAdj,
+    TriangleStrip,
+    TriangleStripAdj,
+    TriangleFan
+};
 
 #define ALWAYS_INLINE __attribute__((always_inline))
 
@@ -21,6 +37,7 @@ typedef float data_t;
 // C++ standards restrain the unwinding of macro arguments used with `##`
 #define CONCAT_LITERAL(LEFT, RIGHT) LEFT ## RIGHT
 #define CONCAT(LEFT, RIGHT) CONCAT_LITERAL(LEFT, RIGHT)
+#define CONCAT_TRIPLE(LEFT, MIDDLE, RIGHT) CONCAT(LEFT, CONCAT(MIDDLE, RIGHT))
 
 /*
  * The Varying class definition helper macro is defined here.

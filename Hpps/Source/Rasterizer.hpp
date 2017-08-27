@@ -11,24 +11,16 @@
 
 #include <vector>
 #include <memory>
-#include <cmath>
 
 #include "Vertex.hpp"
 #include "Fragment.hpp"
 #include "Misc.hpp"
 
-enum DrawType {
-    Points,
-    Lines,
-    LineStrip,
-    LineLoop,
-    Triangles,
-    TriangleStrip,
-    TriangleFan
-};
-
 template <class Varying>
 class Rasterizer {
+    template <class Attribute, class Uniform, class _Varying>
+    friend class Pipeline;
+    
     typedef Vertex<Varying> _Vertex;
     typedef Fragment<Varying> _Fragment;
     
@@ -40,35 +32,27 @@ class Rasterizer {
     size_t rasterizeLine(_Vertex **vertexPtrs);
     size_t rasterizeTriangle(_Vertex **vertexPtrs);
     
-    inline coord_t getPixelX(_Vertex *v) {
-        return (coord_t)std::round(v->windowX * width);
-    }
-    inline coord_t getPixelY(_Vertex *v) {
-        return (coord_t)std::round(v->windowY * height);
-    }
-    
 public:
-    Rasterizer(unsigned int width, unsigned int height, _Fragment *frags): width(width), height(height), frags(frags) {}
+    Rasterizer(unsigned int width, unsigned int height): width(width), height(height) {}
     
-    inline size_t rasterize(DrawType type, _Vertex **vertexPtrs);
+    inline size_t rasterize(PolygonType type, _Vertex **vertexPtrs);
 };
 
 template <class Varying>
-inline size_t Rasterizer<Varying>::rasterize(DrawType type, _Vertex **vertexPtrs) {
+ALWAYS_INLINE size_t Rasterizer<Varying>::rasterize(PolygonType type, _Vertex **vertexPtrs) {
+    Buffer &buffer = Buffer::sharedInstance();
+    buffer.setFragmentBufferSize(width * height * sizeof(_Fragment));
+    frags = (_Fragment*)buffer.getFragmentBufferBeginPtr();
     switch (type) {
         case Points:
             return rasterizePoint(vertexPtrs);
         case Lines:
-        case LineStrip:
-        case LineLoop:
             return rasterizeLine(vertexPtrs);
         case Triangles:
-        case TriangleStrip:
-        case TriangleFan:
             return rasterizeTriangle(vertexPtrs);
             
         default:
-            fatalError("Unknown draw type"); // Should never reach here
+            fatalError("Unknown rasterize type"); // Should never reach here
     }
 }
 
@@ -79,11 +63,11 @@ size_t Rasterizer<Varying>::rasterizePoint(_Vertex **vertexPtrs) {
     int pointSize = vertex->pointSize;
     data_t z = vertex->position.z;
     
-    // Simple offset to the top left point; need to be improved
+    // Simple offset to the top left point; Need to be improved
     int radius = pointSize / 2;
-    coord_t leftX = getPixelX(vertex) - radius;
+    coord_t leftX = vertex->pixelX - radius;
     coord_t rightX = leftX + pointSize;
-    coord_t topY = getPixelY(vertex) - radius;
+    coord_t topY = vertex->pixelY - radius;
     coord_t BottomY = topY + pointSize;
     
     _Fragment *crtFrag = frags;
@@ -104,7 +88,7 @@ template <class Varying>
 size_t Rasterizer<Varying>::rasterizeLine(_Vertex **vertexPtrs) {
     // Setup
     _Vertex *&vertexA = vertexPtrs[0], *&vertexB = vertexPtrs[1];
-    coord_t pixelXA = getPixelX(vertexA), pixelXB = getPixelX(vertexB), pixelYA = getPixelY(vertexA), pixelYB = getPixelY(vertexB);
+    coord_t pixelXA = vertexA->pixelX, pixelXB = vertexB->pixelX, pixelYA = vertexA->pixelY, pixelYB = vertexB->pixelY;
     int dx = pixelXB - pixelXA, dy = pixelYB - pixelYA;
     int stepX = dx > 0 ? 1 : -1, stepY = dy > 0 ? 1 : -1;
     dx = abs(dx); dy = abs(dy); // For error calculating
@@ -175,8 +159,8 @@ template <class Varying>
 size_t Rasterizer<Varying>::rasterizeTriangle(_Vertex **vertexPtrs) {
     _Vertex *vertexA = vertexPtrs[0], *vertexB = vertexPtrs[1], *vertexC = vertexPtrs[2];
     // Get bounding box
-    coord_t xA = getPixelX(vertexA), xB = getPixelX(vertexB), xC = getPixelX(vertexC);
-    coord_t yA = getPixelY(vertexA), yB = getPixelY(vertexB), yC = getPixelY(vertexC);
+    coord_t xA = vertexA->pixelX, xB = vertexB->pixelX, xC = vertexC->pixelX;
+    coord_t yA = vertexA->pixelY, yB = vertexB->pixelY, yC = vertexC->pixelY;
     coord_t xLeft = std::min(std::min(xA, xB), xC), xRight = std::max(std::max(xA, xB), xC);
     coord_t yTop = std::min(std::min(yA, yB), yC), yBottom = std::max(std::max(yA, yB), yC);
     // Edge check

@@ -22,7 +22,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "vec.hpp"
+#include "Vec.hpp"
 
 
 typedef int coord_t;
@@ -67,7 +67,7 @@ private:
         -1.0f, -1.0f, 0.0f, 1.0f  // Bottom-left
     };
     
-    GLuint elements[6] = {
+    GLuint indexes[6] = {
         0, 1, 2,
         2, 3, 0
     };
@@ -83,7 +83,7 @@ private:
     }
     
     void clearZBuffer() {
-        memset(zBuffer, 0, sizeof(zBuffer) * width * height);
+        memset(zBuffer, 0, sizeof(GLfloat) * width * height);
     }
     
     void boundFPS() {
@@ -209,15 +209,15 @@ bool WindowContext::initWindow() {
     
     
     // OpenGL configuration
-    GLuint vertexBuffer;
-    glGenBuffers(1, &vertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    GLuint attributeBuffer;
+    glGenBuffers(1, &attributeBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, attributeBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     
     GLuint elementBuffer;
     glGenBuffers(1, &elementBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexes), indexes, GL_STATIC_DRAW);
     
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderText, NULL);
