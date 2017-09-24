@@ -115,7 +115,12 @@ DEF_VEC_DOT(4)
 
 // Frequently used constant vectors
 namespace Color {
+    vec4 black = {0.0, 0.0, 0.0, 1.0};
     vec4 white = {1.0, 1.0, 1.0, 1.0};
+    vec4 red = {1.0, 0.0, 0.0, 1.0};
+    vec4 green = {0.0, 1.0, 0.0, 1.0};
+    vec4 blue = {0.0, 0.0, 1.0, 1.0};
+    vec4 cyan = {0.0, 1.0, 1.0, 1.0};
 }
 
 #endif /* Vec_h */

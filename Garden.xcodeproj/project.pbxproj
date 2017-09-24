@@ -40,7 +40,6 @@
 		A529D0531F51A24400E44247 /* ColoredLine.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ColoredLine.hpp; path = Hpps/Test/ColoredLine.hpp; sourceTree = "<group>"; };
 		A529D0541F51A24400E44247 /* HelloElements.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HelloElements.hpp; path = Hpps/Test/HelloElements.hpp; sourceTree = "<group>"; };
 		A529D0551F51A24400E44247 /* HelloLines.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HelloLines.hpp; path = Hpps/Test/HelloLines.hpp; sourceTree = "<group>"; };
-		A529D0561F51A24400E44247 /* HelloPoints.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HelloPoints.hpp; path = Hpps/Test/HelloPoints.hpp; sourceTree = "<group>"; };
 		A529D0571F51A24400E44247 /* HelloTriangles.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HelloTriangles.hpp; path = Hpps/Test/HelloTriangles.hpp; sourceTree = "<group>"; };
 		A529D0581F51A24400E44247 /* LineStripAndLineLoop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = LineStripAndLineLoop.hpp; path = Hpps/Test/LineStripAndLineLoop.hpp; sourceTree = "<group>"; };
 		A52D9EEF1F51A54700D65D28 /* BasicTests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = BasicTests.hpp; path = Hpps/Test/BasicTests.hpp; sourceTree = "<group>"; };
@@ -73,7 +72,6 @@
 				A529D0531F51A24400E44247 /* ColoredLine.hpp */,
 				A529D0541F51A24400E44247 /* HelloElements.hpp */,
 				A529D0551F51A24400E44247 /* HelloLines.hpp */,
-				A529D0561F51A24400E44247 /* HelloPoints.hpp */,
 				A529D0571F51A24400E44247 /* HelloTriangles.hpp */,
 				A529D0581F51A24400E44247 /* LineStripAndLineLoop.hpp */,
 			);

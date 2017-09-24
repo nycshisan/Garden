@@ -35,7 +35,7 @@ class Pipeline {
     typedef _Vertex** Primitive;
     
     coord_t width, height;
-    WindowContext *wc;
+    WindowContext *context;
     
     // Shader processing types
     PolygonType vpType, gpType, fpType;
@@ -53,11 +53,9 @@ class Pipeline {
     Primitive primitive;
     size_t primitiveVertexNumber;
     
-    
     _Rasterizer *rasterizer;
     
     bool enabledGeometryShader = false;
-    // Buffers used by the geometry shader
     
     
     
@@ -71,7 +69,7 @@ class Pipeline {
         drawCount = count;
         buffer.setVertexBufferSize(drawCount * sizeof(_Vertex));
         buffer.setPrimitiveVPBufferSize(drawCount * sizeof(_Vertex**));
-        buffer.setPrimitiveFPBufferSize(drawCount * sizeof(_Vertex**));
+        buffer.setPrimitiveFPBufferSize((drawCount * 3) * sizeof(_Vertex**)); // Splited primitives will take up more memory. Have not calculated its upper limit, just multiply three here.
         processVertexes();
     }
     
@@ -87,7 +85,7 @@ class Pipeline {
         return primitiveNumber;
     }
     ALWAYS_INLINE size_t _splitStripPrimitive(size_t vertexNumber, _Vertex **dstBufPtr) {
-        size_t primitiveNumber = std::max((size_t)0, (primitiveVertexNumber / (vertexNumber - 1)) - 1);
+        size_t primitiveNumber = std::max((size_t)0, primitiveVertexNumber - vertexNumber + 1);
         for (size_t i = 0; i < primitiveNumber; ++i) {
             for (size_t j = 0; j < vertexNumber; ++j) {
                 *dstBufPtr = *(primitive + j);
@@ -123,7 +121,7 @@ public:
     std::function<void(const _Vertex * const, const Uniform &)> geometryShader;
     std::function<void(const _Fragment &, const Uniform &, vec4 &)> fragmentShader;
     
-    Pipeline(WindowContext *context): wc(context) {
+    Pipeline(WindowContext *context): context(context) {
         this->width = context->width; this->height = context->height;
         this->rasterizer = new _Rasterizer(width, height);
         this->zBuffer = context->zBuffer;
@@ -141,17 +139,17 @@ public:
 template <class Attribute, class Uniform, class Varying>
 void Pipeline<Attribute, Uniform, Varying>::processVertexes() {
     // Execute vertex shader
-    _Vertex *vertexBufPtr = (_Vertex*)buffer.getVertexBufferBeginPtr();
-    _Vertex *vertexBufEnd = (_Vertex*)buffer.getVertexBufferEndPtr();
-    for (_Vertex *ptr = vertexBufPtr; ptr < vertexBufEnd; ++ptr) {
+    _Vertex *vertexBufPtr = (_Vertex*)buffer.getVertexBufferPtr();
+    for (_Vertex *ptr = vertexBufPtr; ptr < vertexBufPtr + drawCount; ++ptr) {
         new (ptr)_Vertex;
         vertexShader(*cursor, uniform, *ptr);
         ++cursor;
     }
     
     // Assemble primitives for next shaders
-    _Vertex **primitiveBufPtr = (_Vertex**)buffer.getPrimitiveVPBufferBeginPtr();
-    _Vertex **crtPrimitiveBufPtr;
+    _Vertex **primitiveBufPtr = (_Vertex**)buffer.getPrimitiveVPBufferPtr();
+    _Vertex **crtPrimitiveBufPtr = primitiveBufPtr;
+    _Vertex *crtVertexBufPtr = vertexBufPtr;
     size_t primitiveNumber;
     size_t vertexNumber; // The number of vertexes of the primitive
     
@@ -174,8 +172,6 @@ void Pipeline<Attribute, Uniform, Varying>::processVertexes() {
         }
         
         primitiveNumber = drawCount / vertexNumber;
-        crtPrimitiveBufPtr = primitiveBufPtr;
-        _Vertex *crtVertexBufPtr = vertexBufPtr;
         for (size_t i = 0; i < primitiveNumber; ++i) {
             for (size_t j = 0; j < vertexNumber; ++j) {
                 *crtPrimitiveBufPtr = crtVertexBufPtr;
@@ -186,7 +182,10 @@ void Pipeline<Attribute, Uniform, Varying>::processVertexes() {
         // Otherwise, pass them through to next shaders
         vertexNumber = drawCount;
         primitiveNumber = 1;
-        *primitiveBufPtr = vertexBufPtr;
+        for (size_t j = 0; j < vertexNumber; ++j) {
+            *crtPrimitiveBufPtr = crtVertexBufPtr;
+            ++crtPrimitiveBufPtr; ++crtVertexBufPtr;
+        }
     }
     
     // Loop over the primitives
@@ -207,7 +206,7 @@ void Pipeline<Attribute, Uniform, Varying>::processVertexes() {
 
 template <class Attribute, class Uniform, class Varying>
 void Pipeline<Attribute, Uniform, Varying>::processGeometries() {
-    _Vertex *vertexBufferPtr = (_Vertex*)buffer.getVertexBufferBeginPtr();
+    _Vertex *vertexBufferPtr = (_Vertex*)buffer.getVertexBufferPtr();
     
     if (enabledGeometryShader) {
         
@@ -234,15 +233,9 @@ void Pipeline<Attribute, Uniform, Varying>::processFragments() {
             
         case TrianglesAdj:
         case TriangleStripAdj:
-            _Vertex **readPtr, **writePtr;
-            readPtr = writePtr = primitive;
-            for (size_t i = 0; i < primitiveVertexNumber; ++i) {
+            for (size_t i = 0; i <= primitiveVertexNumber / 2; ++i) {
                 // Only store the vertex pointers with an even index
-                if (i % 2 == 0) {
-                    *writePtr = *readPtr;
-                    ++writePtr;
-                }
-                ++readPtr;
+                primitive[i] = primitive[2 * i];
             }
             break;
             
@@ -253,7 +246,7 @@ void Pipeline<Attribute, Uniform, Varying>::processFragments() {
     // Split the primitive for rasterization
     PolygonType rasterizeType;
     size_t vertexNumber; // The number of rasterizing vertexes
-    _Vertex **primitiveBufPtr = (_Vertex**)buffer.getPrimitiveFPBufferBeginPtr();
+    _Vertex **primitiveBufPtr = (_Vertex**)buffer.getPrimitiveFPBufferPtr();
     size_t primitiveNumber;
     switch (fpType) {
         case Points:
@@ -289,13 +282,14 @@ void Pipeline<Attribute, Uniform, Varying>::processFragments() {
         case TriangleFan:
             rasterizeType = Triangles;
             vertexNumber = 3;
+            primitiveNumber = _splitFanPrimitive(vertexNumber, primitiveBufPtr);
             break;
     }
     
     // For LineLoop drawing, append the last edge
-    if (fpType == LineLoop) {
-        *(primitiveBufPtr + 2 * primitiveNumber) = *(primitive + primitiveVertexNumber - 1);
-        *(primitiveBufPtr + 2 * primitiveNumber + 1) = *primitive;
+    if (fpType == LineLoop && primitiveNumber >= 2) {
+        *(primitiveBufPtr + 2 * primitiveNumber) = *(primitiveBufPtr + 2 * primitiveNumber - 1);
+        *(primitiveBufPtr + 2 * primitiveNumber + 1) = *primitiveBufPtr;
         ++primitiveNumber;
     }
     
@@ -318,7 +312,7 @@ void Pipeline<Attribute, Uniform, Varying>::processFragments() {
             }
             
             // Z-test
-            if (wc->enabledZTest) {
+            if (context->enabledZTest) {
                 frag->normalizeZ();
                 GLfloat *zBufPtr = zBuffer + pixelX * width + pixelY;
                 if (frag->normalizedZ <= *zBufPtr) {
@@ -329,7 +323,7 @@ void Pipeline<Attribute, Uniform, Varying>::processFragments() {
             }
             
             fragmentShader(*frag, uniform, color);
-            wc->setPixel(pixelX, pixelY, color);
+            context->setPixel(pixelX, pixelY, color);
         }
 
     }

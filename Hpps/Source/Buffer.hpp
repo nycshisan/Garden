@@ -15,25 +15,19 @@
 #include "Misc.hpp"
 
 #define DEF_BUF_VARIABLES(BUF_NAME) \
-void *CONCAT(BUF_NAME, BufferBeginPtr) = nullptr; \
-void *CONCAT(BUF_NAME, BufferEndPtr) = nullptr; \
+void *CONCAT(BUF_NAME, BufferPtr) = nullptr; \
 size_t CONCAT(BUF_NAME, BufferSize) = 0;
 
 #define DEF_BUF_METHODS(BUF_NAME, BUF_NAME_CAPITAL) \
-ALWAYS_INLINE void *CONCAT_TRIPLE(get, BUF_NAME_CAPITAL, BufferBeginPtr)() { \
-    assert(CONCAT(BUF_NAME, BufferBeginPtr) != nullptr); \
-    return CONCAT(BUF_NAME, BufferBeginPtr); \
-} \
-ALWAYS_INLINE void *CONCAT_TRIPLE(get, BUF_NAME_CAPITAL, BufferEndPtr)() { \
-    assert(CONCAT(BUF_NAME, BufferEndPtr) != nullptr); \
-    return CONCAT(BUF_NAME, BufferEndPtr); \
+ALWAYS_INLINE void *CONCAT_TRIPLE(get, BUF_NAME_CAPITAL, BufferPtr)() { \
+    assert(CONCAT(BUF_NAME, BufferPtr) != nullptr); \
+    return CONCAT(BUF_NAME, BufferPtr); \
 } \
 ALWAYS_INLINE void CONCAT_TRIPLE(set, BUF_NAME_CAPITAL, BufferSize)(size_t size) { \
     if (size > CONCAT(BUF_NAME, BufferSize)) { \
         CONCAT(BUF_NAME, BufferSize) = size; \
-        free(CONCAT(BUF_NAME, BufferBeginPtr)); \
-        CONCAT(BUF_NAME, BufferBeginPtr) = malloc(size); \
-        CONCAT(BUF_NAME, BufferEndPtr) = (char*)CONCAT(BUF_NAME, BufferBeginPtr) + size; \
+        free(CONCAT(BUF_NAME, BufferPtr)); \
+        CONCAT(BUF_NAME, BufferPtr) = malloc(size); \
     } \
 }
 
@@ -63,10 +57,10 @@ public:
     DEF_BUF_METHODS(fragment, Fragment)
     
     ~Buffer() {
-        free(vertexBufferBeginPtr);
-        free(primitiveVPBufferBeginPtr);
-        free(primitiveFPBufferBeginPtr);
-        free(fragmentBufferBeginPtr);
+        free(vertexBufferPtr);
+        free(primitiveVPBufferPtr);
+        free(primitiveFPBufferPtr);
+        free(fragmentBufferPtr);
     }
 };
 

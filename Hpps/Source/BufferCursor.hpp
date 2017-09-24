@@ -54,16 +54,6 @@ class BufferCursor {
         _index = index;
     }
     
-    ALWAYS_INLINE bool end() {
-        if (cursorType == Array) {
-            // drawArrays mode
-            return _index == attributeBuffer.size();
-        } else {
-            // drawElements mode
-            return _index == indexBuffer.size();
-        }
-    }
-    
     ALWAYS_INLINE size_t size() {
         if (cursorType == Array) {
             // drawArrays mode

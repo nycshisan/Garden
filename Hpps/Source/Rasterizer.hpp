@@ -42,7 +42,7 @@ template <class Varying>
 ALWAYS_INLINE size_t Rasterizer<Varying>::rasterize(PolygonType type, _Vertex **vertexPtrs) {
     Buffer &buffer = Buffer::sharedInstance();
     buffer.setFragmentBufferSize(width * height * sizeof(_Fragment));
-    frags = (_Fragment*)buffer.getFragmentBufferBeginPtr();
+    frags = (_Fragment*)buffer.getFragmentBufferPtr();
     switch (type) {
         case Points:
             return rasterizePoint(vertexPtrs);
@@ -165,9 +165,9 @@ size_t Rasterizer<Varying>::rasterizeTriangle(_Vertex **vertexPtrs) {
     coord_t yTop = std::min(std::min(yA, yB), yC), yBottom = std::max(std::max(yA, yB), yC);
     // Edge check
     xLeft = std::max(xLeft, 0);
-    xRight = std::min(xRight, height - 1);
+    xRight = std::min(xRight, width - 1);
     yTop = std::max(yTop, 0);
-    yBottom = std::min(yBottom, width - 1);
+    yBottom = std::min(yBottom, height - 1);
     
     // Calculate proportion matrix
     vec4 &posA = vertexA->position, &posB = vertexB->position, &posC = vertexC->position;
