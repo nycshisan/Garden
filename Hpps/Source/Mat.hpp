@@ -339,7 +339,7 @@ ALWAYS_INLINE void invert(mat4 &m) {
     minor0 = _mm_sub_ps(minor0, _mm_mul_ps(row2, tmp));
     minor2 = _mm_sub_ps(_mm_mul_ps(row0, tmp), minor2);
     minor2 = _mm_shuffle_ps(minor2, minor2, 0x4E);
-    // ---
+
     tmp = _mm_mul_ps(row0, row1);
     tmp = _mm_shuffle_ps(tmp, tmp, 0xB1);
     

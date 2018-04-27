@@ -36,12 +36,6 @@
 		A529D04E1F51A21B00E44247 /* Rasterizer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Rasterizer.hpp; path = Hpps/Source/Rasterizer.hpp; sourceTree = "<group>"; };
 		A529D04F1F51A21B00E44247 /* Vec.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Vec.hpp; path = Hpps/Source/Vec.hpp; sourceTree = "<group>"; };
 		A529D0501F51A21B00E44247 /* Vertex.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Vertex.hpp; path = Hpps/Source/Vertex.hpp; sourceTree = "<group>"; };
-		A529D0521F51A24400E44247 /* ClippingAndZTest.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ClippingAndZTest.hpp; path = Hpps/Test/ClippingAndZTest.hpp; sourceTree = "<group>"; };
-		A529D0531F51A24400E44247 /* ColoredLine.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ColoredLine.hpp; path = Hpps/Test/ColoredLine.hpp; sourceTree = "<group>"; };
-		A529D0541F51A24400E44247 /* HelloElements.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HelloElements.hpp; path = Hpps/Test/HelloElements.hpp; sourceTree = "<group>"; };
-		A529D0551F51A24400E44247 /* HelloLines.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HelloLines.hpp; path = Hpps/Test/HelloLines.hpp; sourceTree = "<group>"; };
-		A529D0571F51A24400E44247 /* HelloTriangles.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = HelloTriangles.hpp; path = Hpps/Test/HelloTriangles.hpp; sourceTree = "<group>"; };
-		A529D0581F51A24400E44247 /* LineStripAndLineLoop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = LineStripAndLineLoop.hpp; path = Hpps/Test/LineStripAndLineLoop.hpp; sourceTree = "<group>"; };
 		A52D9EEF1F51A54700D65D28 /* BasicTests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = BasicTests.hpp; path = Hpps/Test/BasicTests.hpp; sourceTree = "<group>"; };
 		A52D9EF01F51A9FB00D65D28 /* Helper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Helper.hpp; path = Hpps/Test/Helper.hpp; sourceTree = "<group>"; };
 		A53E83051EB1FF37002BA1D5 /* libGLEW.2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.0.0.dylib; path = ../../../../../../usr/local/lib/libGLEW.2.0.0.dylib; sourceTree = "<group>"; };
@@ -49,6 +43,7 @@
 		A576D5F71F06067000457E31 /* Garden.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Garden.cpp; path = Garden/Garden.cpp; sourceTree = SOURCE_ROOT; };
 		A5C25FCC1EB1FEE7002738A1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		A5C25FCE1EB1FEFF002738A1 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../usr/local/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
+		A5F5A7A22092C6AD002C5FDB /* NoiseTests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = NoiseTests.hpp; path = Hpps/Test/NoiseTests.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,19 +60,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A529D0591F51A39500E44247 /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-				A529D0521F51A24400E44247 /* ClippingAndZTest.hpp */,
-				A529D0531F51A24400E44247 /* ColoredLine.hpp */,
-				A529D0541F51A24400E44247 /* HelloElements.hpp */,
-				A529D0551F51A24400E44247 /* HelloLines.hpp */,
-				A529D0571F51A24400E44247 /* HelloTriangles.hpp */,
-				A529D0581F51A24400E44247 /* LineStripAndLineLoop.hpp */,
-			);
-			name = "New Group";
-			sourceTree = "<group>";
-		};
 		A53E830A1EB201F1002BA1D5 /* Spades */ = {
 			isa = PBXGroup;
 			children = (
@@ -98,8 +80,8 @@
 			isa = PBXGroup;
 			children = (
 				A52D9EF01F51A9FB00D65D28 /* Helper.hpp */,
-				A529D0591F51A39500E44247 /* New Group */,
 				A52D9EEF1F51A54700D65D28 /* BasicTests.hpp */,
+				A5F5A7A22092C6AD002C5FDB /* NoiseTests.hpp */,
 			);
 			name = Seeds;
 			sourceTree = "<group>";
@@ -177,7 +159,7 @@
 		A5C25FB91EB1FED7002738A1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "陈十三";
 				TargetAttributes = {
 					A53E83101EB20221002BA1D5 = {
@@ -243,8 +225,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_ASSIGN_ENUM = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -252,7 +237,12 @@
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = NO;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -299,8 +289,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_ASSIGN_ENUM = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -308,7 +301,12 @@
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = NO;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

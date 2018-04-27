@@ -57,9 +57,6 @@ class Pipeline {
     
     bool enabledGeometryShader = false;
     
-    
-    
-    
     GLfloat *zBuffer;
     
     // Common operations for `drawArrays` and `drawElements`
@@ -112,7 +109,6 @@ class Pipeline {
     void processFragments();
     
 public:
-    
     std::vector<Attribute> attributeBuffer;
     std::vector<size_t> indexBuffer;
     Uniform uniform;

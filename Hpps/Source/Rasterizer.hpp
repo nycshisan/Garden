@@ -194,7 +194,7 @@ size_t Rasterizer<Varying>::rasterizeTriangle(_Vertex **vertexPtrs) {
             pVec = pMat * posVec;
             pSum = pVec.x + pVec.y + pVec.z;
             pVec /= pSum;
-            pA = pVec.x, pB = pVec.y, pC = pVec.z;
+            pA = pVec.x; pB = pVec.y; pC = pVec.z;
             
             if (pA < 0 || pB < 0 || pC < 0) {
                 continue;

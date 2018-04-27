@@ -8,7 +8,7 @@
 
 #include "Pipeline.hpp"
 
-#include "BasicTests.hpp"
+#include "NoiseTests.hpp"
 
 int main(int argc, const char *argv[]) {    
     auto context = new WindowContext(600, 480, "Garden");

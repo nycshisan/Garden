@@ -34,7 +34,7 @@ DEF_VS {
     vertex.pointSize = attribute.size;
 }
 DEF_FS {
-    fragColor = u.color;
+    fragColor = uniform.color;
 }
 
 DEF_PREPARE {
